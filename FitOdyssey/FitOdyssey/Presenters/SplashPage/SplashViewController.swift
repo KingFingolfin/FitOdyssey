@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class SplashViewController: UIViewController {
     private let imageView = UIImageView()
@@ -17,6 +18,9 @@ class SplashViewController: UIViewController {
         view.backgroundColor = .appBackground
         imageSetup()
         textSetup()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.goToNextPage()
+        }
     }
     
     private func imageSetup() {
@@ -56,4 +60,13 @@ class SplashViewController: UIViewController {
             slogan.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
     }
+    
+    private func goToNextPage() {
+            let loginView = LoginView()
+            let hostingController = UIHostingController(rootView: loginView)
+            
+            hostingController.modalTransitionStyle = .crossDissolve
+            hostingController.modalPresentationStyle = .fullScreen
+            self.present(hostingController, animated: true, completion: nil)
+        }
 }

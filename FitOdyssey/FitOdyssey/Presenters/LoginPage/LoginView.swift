@@ -69,6 +69,7 @@ struct LoginView: View {
             }
             .navigationDestination(isPresented: $viewModel.isLogedIn) {
 //                ProfileView(showProfile: $isLoggedIn)
+                HomeView()
             }
             .navigationDestination(isPresented: $navigateToRegisterPage) {
                 SignupView()

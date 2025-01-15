@@ -1,14 +1,14 @@
 //
 //  LogInViewModel.swift
-//  Wazaaaaaaaap
+//  FitOdyssey
 //
-//  Created by nino on 12/22/24.
+//  Created by Giorgi on 13.01.25.
 //
 
 import Foundation
 import FirebaseAuth
 import Firebase
-//import GoogleSignIn
+import GoogleSignIn
 import FirebaseCore
 
 class LogInViewModel: ObservableObject {
@@ -63,57 +63,45 @@ class LogInViewModel: ObservableObject {
         print("Login Error: \(errorMessage ?? error.localizedDescription)")
     }
     
-//    //NOTE: ChatGPT ALERT!!
-//    func signInWithGmail(presentation: UIViewController, completion: @escaping (Error?) -> Void) {
-//        guard let clientID = FirebaseApp.app()?.options.clientID else {
-//            completion(NSError(domain: "SignInError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Firebase clientID not found."]))
-//            return
-//        }
-//
-//        let config = GIDConfiguration(clientID: clientID)
-//        GIDSignIn.sharedInstance.configuration = config
-//
-//        GIDSignIn.sharedInstance.signIn(withPresenting: presentation) { result, error in
-//            if let error = error {
-//                completion(error)
-//                return
-//            }
-//
-//            guard let user = result?.user,
-//                  let idToken = user.idToken?.tokenString else {
-//                completion(NSError(domain: "SignInError", code: -2, userInfo: [NSLocalizedDescriptionKey: "Failed to retrieve user or ID token."]))
-//                return
-//            }
-//
-//            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
-//
-//            Auth.auth().signIn(with: credential) { [weak self]  authResult, error in
-//                if let error = error {
-//                    completion(error)
-//                    return
-//                }
-//                completion(nil)
-//                self?.isLogedIn = true
-//                self?.password = ""
-//                self?.email = ""
-//            }
-//        }
-//    }
-//    
     func fetchIsLoggedInState() -> Bool {
         return Auth.auth().currentUser != nil
     }
+
+    func signInWithGmail(presentation: UIViewController, completion: @escaping (Error?) -> Void) {
+        guard let clientID = FirebaseApp.app()?.options.clientID else {
+            completion(NSError(domain: "SignInError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Firebase clientID not found."]))
+            return
+        }
+
+        let config = GIDConfiguration(clientID: clientID)
+        GIDSignIn.sharedInstance.configuration = config
+
+        GIDSignIn.sharedInstance.signIn(withPresenting: presentation) { result, error in
+            if let error = error {
+                completion(error)
+                return
+            }
+
+            guard let user = result?.user,
+                  let idToken = user.idToken?.tokenString else {
+                completion(NSError(domain: "SignInError", code: -2, userInfo: [NSLocalizedDescriptionKey: "Failed to retrieve user or ID token."]))
+                return
+            }
+
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
+
+            Auth.auth().signIn(with: credential) { [weak self]  authResult, error in
+                if let error = error {
+                    completion(error)
+                    return
+                }
+                completion(nil)
+                self?.isLogedIn = true
+                self?.password = ""
+                self?.email = ""
+            }
+        }
+    }
+    
 }
 
-
-import FirebaseFirestore
-import FirebaseAuth
-
-struct User: Codable, Identifiable {
-    @DocumentID var id: String?
-    let uid: String
-    let email: String
-    var name: String
-    var surname: String
-    var ImageUrl: String = ""
-}

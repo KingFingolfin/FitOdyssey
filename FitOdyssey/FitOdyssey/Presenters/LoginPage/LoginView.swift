@@ -51,9 +51,9 @@ struct LoginView: View {
                     .padding(.leading, 32)
                     .padding(.trailing, 18)
                     
-//                    continueWithGoogleButton
-//                        .padding(.horizontal)
-//                        .padding(.top, 100)
+                    continueWithGoogleButton
+                        .padding(.horizontal)
+                        .padding(.top, 100)
                     
                     loginButton
                         .padding()
@@ -67,9 +67,10 @@ struct LoginView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
+            
             .navigationDestination(isPresented: $viewModel.isLogedIn) {
-//                ProfileView(showProfile: $isLoggedIn)
-                HomeView()
+                ProfileView(showProfile: $isLoggedIn)
+//                HomeView()
             }
             .navigationDestination(isPresented: $navigateToRegisterPage) {
                 SignupView()
@@ -105,35 +106,34 @@ struct LoginView: View {
         }
         .foregroundColor(.orange)
     }
+
     
-//    private var continueWithGoogleButton: some View {
-//        Button(action: {
-//            viewModel.signInWithGmail(presentation: getRootViewController()) { error in
-//                if let error = error {
-//                    print("Sign-In Failed: \(error.localizedDescription)")
-//                } else {
-//                    viewModel.isLogedIn = true
-//                    print("Sign-In Successful!")
-//                }
-//            }
-//        }) {
-//            HStack {
-//                Image("google")
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 23, height: 23)
-//
-//                Text("Continue With Google")
-//                    .font(.robotoMedium(size: 20))
-//                    .foregroundColor(.primaryBlack).opacity(0.54)
-//            }
-//            .frame(width: 327)
-//            .padding(.top, 15)
-//            .padding(.bottom, 15)
-//            .background(.primaryWhite)
-//            .cornerRadius(10)
-//        }
-//    }
+    private var continueWithGoogleButton: some View {
+        Button(action: {
+            viewModel.signInWithGmail(presentation: getRootViewController()) { error in
+                if let error = error {
+                    print("Sign-In Failed: \(error.localizedDescription)")
+                } else {
+                    print("Sign-In Successful!")
+                }
+            }
+        }) {
+            HStack {
+                Image(systemName: "globe")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 23, height: 23)
+
+                Text("Continue With Google")
+                    .font(.system(size: 20))
+                    .foregroundColor(.black)
+            }
+            .frame(width: 327, height: 50)
+            .background(Color.white)
+            .cornerRadius(10)
+        }
+    }
+
     
     private var loginButton: some View {
         Button(action: {
@@ -141,7 +141,6 @@ struct LoginView: View {
         }) {
             Text("Log In")
                 .frame(width: 327)
-//                .font(.interSemiBold(size: 20))
                 .padding(.top, 20)
                 .padding(.bottom, 20)
                 .foregroundColor(.white)

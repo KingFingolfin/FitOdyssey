@@ -1,27 +1,51 @@
 //
 //  SignupViewModel.swift
-//  Wazaaaaaaaap
+//  FitOdyssey
 //
-//  Created by Sandro Tsitskishvili on 21.12.24.
+//  Created by Giorgi on 13.01.25.
 //
+
 import SwiftUI
 import Combine
 import FirebaseAuth
-import Firebase
+import FirebaseFirestore
 
 final class SignUpViewModel: ObservableObject {
-    @Published var fullName: String = ""
-    @Published var userName: String = ""
+    @Published var name: String = ""
+    @Published var age: String = ""
+    @Published var weight: String = ""
+    @Published var height: String = ""
+    @Published var gender: String = ""
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var confirmPassword: String = ""
     @Published var statusMessage: String? = nil
     @Published var isSuccess: Bool = false
     @Published var shouldNavigateToLogin: Bool = false
-    
+
     func validateForm() -> (isValid: Bool, message: String?) {
-        guard !fullName.isEmpty, !userName.isEmpty, !email.isEmpty, !password.isEmpty, !confirmPassword.isEmpty else {
+        guard !name.isEmpty,
+              !age.isEmpty,
+              !weight.isEmpty,
+              !height.isEmpty,
+              !gender.isEmpty,
+              !email.isEmpty,
+              !password.isEmpty,
+              !confirmPassword.isEmpty else {
             return (false, "All fields are required.")
+        }
+        
+        guard let ageValue = Int(age), ageValue > 0 else {
+            return (false, "Please enter a valid age.")
+        }
+        guard let weightValue = Double(weight), weightValue > 0 else {
+            return (false, "Please enter a valid weight.")
+        }
+        guard let heightValue = Double(height), heightValue > 0 else {
+            return (false, "Please enter a valid height.")
+        }
+        guard gender.lowercased() == "male" || gender.lowercased() == "female" else {
+            return (false, "Gender must be 'Male' or 'Female'.")
         }
         guard isValidEmail(email) else {
             return (false, "Please enter a valid email address.")
@@ -34,7 +58,7 @@ final class SignUpViewModel: ObservableObject {
         }
         return (true, nil)
     }
-    
+
     func SignUp() async {
         let validationResult = validateForm()
         
@@ -60,24 +84,85 @@ final class SignUpViewModel: ObservableObject {
             }
         }
     }
+
     
     func saveUserInfo() {
         let firestore = Firestore.firestore()
-        guard let id = Auth.auth().currentUser?.uid else { return }
-        guard let mail = Auth.auth().currentUser?.email else { return }
-        let user = User(uid: id, email: mail, name: userName, surname: fullName)
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let email = Auth.auth().currentUser?.email else { return }
+
+        let user = User(
+            uid: uid,
+            email: email,
+            name: name,
+            age: Int(age) ?? 0,
+            weight: weight,
+            height: Double(height) ?? 0.0,
+            gender: gender,
+            ImageUrl: "",
+            before_image: "",
+            after_image: "",
+            measurements: [],
+            workoutPlans: []
+        )
+
         do {
             try firestore.collection("Users")
-                .document(id)
+                .document(uid)
                 .setData(from: user) { error in
                     if let error = error {
-                        print("failed to save user data \(user)")
+                        print("Failed to save user data: \(error.localizedDescription)")
+                    } else {
+                        print("User data saved successfully.")
                     }
                 }
         } catch {
-            print("failed saving user data")
+            print("Failed saving user data.")
         }
     }
+
+    func saveMeasurement(measurement: Measurements) {
+        let firestore = Firestore.firestore()
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+
+        do {
+            try firestore.collection("Users")
+                .document(userId)
+                .collection("Measurements")
+                .document(UUID().uuidString)
+                .setData(from: measurement) { error in
+                    if let error = error {
+                        print("Error saving measurement: \(error.localizedDescription)")
+                    } else {
+                        print("Measurement saved successfully.")
+                    }
+                }
+        } catch {
+            print("Failed saving measurement data.")
+        }
+    }
+
+    func saveWorkoutPlan(plan: WorkoutPlan) {
+        let firestore = Firestore.firestore()
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+
+        do {
+            try firestore.collection("Users")
+                .document(userId)
+                .collection("WorkoutPlans")
+                .document(plan.id ?? UUID().uuidString)
+                .setData(from: plan) { error in
+                    if let error = error {
+                        print("Error saving workout plan: \(error.localizedDescription)")
+                    } else {
+                        print("Workout plan saved successfully.")
+                    }
+                }
+        } catch {
+            print("Failed saving workout plan.")
+        }
+    }
+
     
     func isValidEmail(_ email: String) -> Bool {
         let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"

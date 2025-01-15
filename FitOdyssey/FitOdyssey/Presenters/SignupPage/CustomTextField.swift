@@ -1,8 +1,8 @@
 //
 //  CustomTextField.swift
-//  Wazaaaaaaaap
+//  FitOdyssey
 //
-//  Created by Sandro Tsitskishvili on 21.12.24.
+//  Created by Giorgi on 13.01.25.
 //
 import SwiftUI
 

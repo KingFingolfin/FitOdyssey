@@ -1,8 +1,8 @@
 //
-//  UserModel.swift
-//  Wazaaaaaaaap
+//  Meal.swift
+//  FitOdyssey
 //
-//  Created by Cotne Chubinidze on 21.12.24.
+//  Created by Giorgi on 17.01.25.
 //
 import FirebaseFirestore
 import FirebaseAuth
@@ -23,13 +23,6 @@ struct User: Codable, Identifiable {
     var workoutPlans: [WorkoutPlan] = []
 }
 
-struct Meal: Codable, Identifiable {
-    @DocumentID var id: String?
-    var name: String = ""
-    var image: String = ""
-    var recipe: String = ""
-}
-
 struct Measurements: Codable {
     var date: Date
     var biceps: Double = 0
@@ -38,22 +31,10 @@ struct Measurements: Codable {
     var shoulders: Double = 0
 }
 
-struct Exercise: Codable, Identifiable {
-    @DocumentID var id: String?
-    var name: String = ""
-    var image: String = ""
-    var instructions: String = ""
-    var type: ExerciseType = ExerciseType.repsAndWeight
-}
-
-enum ExerciseType: String, Codable {
-    case repsAndWeight
-    case repsOnly
-}
-
 struct WorkoutPlan: Codable, Identifiable {
     @DocumentID var id: String?
     var name: String = ""
     var exercises: [Exercise] = []
 }
+
 

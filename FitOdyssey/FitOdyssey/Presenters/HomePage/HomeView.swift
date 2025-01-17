@@ -14,7 +14,10 @@ struct HomeView: View {
     var body: some View {
         HStack{
             Text("HOME")
-        }.background(.red)
+        }
+        .background(.red)
+        .navigationBarBackButtonHidden(true)
+//        .navigationBarItems(leading: btnBack)
         
     }
 }

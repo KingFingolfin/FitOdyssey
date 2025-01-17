@@ -13,7 +13,6 @@ struct LoginView: View {
     @State private var navigateToRegisterPage = false
     @State private var isLoggedIn = false
     
-    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -43,6 +42,9 @@ struct LoginView: View {
                         isPassword: true
                     )
                     
+                    loginButton
+                        .padding()
+                    
                     HStack {
                         newUserQuestionLabel
                         Spacer()
@@ -51,12 +53,13 @@ struct LoginView: View {
                     .padding(.leading, 32)
                     .padding(.trailing, 18)
                     
+                    
+                    
                     continueWithGoogleButton
                         .padding(.horizontal)
                         .padding(.top, 100)
                     
-                    loginButton
-                        .padding()
+                    
                 }
                 .padding()
             }
@@ -69,8 +72,8 @@ struct LoginView: View {
             }
             
             .navigationDestination(isPresented: $viewModel.isLogedIn) {
-                ProfileView(showProfile: $isLoggedIn)
-//                HomeView()
+//                TabBarWrapperView(showProfile: $isLoggedIn)
+                TabBarWrapperView()
             }
             .navigationDestination(isPresented: $navigateToRegisterPage) {
                 SignupView()
@@ -109,28 +112,38 @@ struct LoginView: View {
 
     
     private var continueWithGoogleButton: some View {
-        Button(action: {
-            viewModel.signInWithGmail(presentation: getRootViewController()) { error in
-                if let error = error {
-                    print("Sign-In Failed: \(error.localizedDescription)")
-                } else {
-                    print("Sign-In Successful!")
+        VStack{
+            Text("Alternatively Login with:")
+                .foregroundStyle(.white)
+                .padding(.bottom, 5)
+            
+            Button(action: {
+                viewModel.signInWithGmail(presentation: getRootViewController()) { error in
+                    if let error = error {
+                        print("Sign-In Failed: \(error.localizedDescription)")
+                    } else {
+                        print("Sign-In Successful!")
+                    }
                 }
+            }) {
+                HStack {
+                    Image(.google)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 23, height: 23)
+                    
+                    Text("Login With Google")
+                        .font(.system(size: 20))
+                        .foregroundColor(.white)
+                }
+                .frame(width: 327, height: 50)
+                .background(Color.clear)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.orange, lineWidth: 2)
+                )
+                .cornerRadius(10)
             }
-        }) {
-            HStack {
-                Image(systemName: "globe")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 23, height: 23)
-
-                Text("Continue With Google")
-                    .font(.system(size: 20))
-                    .foregroundColor(.black)
-            }
-            .frame(width: 327, height: 50)
-            .background(Color.white)
-            .cornerRadius(10)
         }
     }
 
@@ -150,6 +163,33 @@ struct LoginView: View {
     }
 }
 
+//func onLoginSuccess(showProfile: Binding<Bool>) {
+//    if let window = UIApplication.shared.windows.first {
+//        let tabBarController = UITabBarController()
+//        
+//        // Home (SwiftUI)
+//        let homeView = HomeView()
+//        let homeHostingController = UIHostingController(rootView: homeView)
+//        
+//        let profileView = ProfileView(showProfile: showProfile)
+//        let profileHostingController = UIHostingController(rootView: profileView)
+//        
+//        // UIKit view controllers
+//        let settingsViewController = SettingsViewController()  // UIKit
+//        
+//        // Set up tab bar items
+//        homeHostingController.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house.fill"), tag: 0)
+//        profileHostingController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.fill"), tag: 1)
+//        settingsViewController.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gear"), tag: 2)
+//        
+//        // Set the view controllers for the tab bar
+//        tabBarController.viewControllers = [homeHostingController, profileHostingController, settingsViewController]
+//        
+//        // Set the window's root view controller to the tab bar controller
+//        window.rootViewController = tabBarController
+//        window.makeKeyAndVisible()
+//    }
+//}
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {

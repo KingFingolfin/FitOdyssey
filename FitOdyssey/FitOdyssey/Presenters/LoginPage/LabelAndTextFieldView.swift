@@ -22,6 +22,8 @@ struct LabelAndTextFieldView: View {
             HStack {
                 if isPassword {
                     customLockImage
+                } else {
+                    customMailImage
                 }
                 
                 if isPassword && isSecure {
@@ -45,8 +47,8 @@ struct LabelAndTextFieldView: View {
             .background(Color.appTextFieldBackGround)
         }
         .padding(.vertical, 17)
-        .padding(.leading, 32)
-        .padding(.trailing, 15)
+        .padding(.leading, 20)
+        .padding(.trailing, 20)
     }
     
     private var titleLabel: some View {
@@ -55,9 +57,12 @@ struct LabelAndTextFieldView: View {
     }
     
     private var customLockImage: some View {
-        Image("customLock")
+        Image(systemName: "lock").foregroundStyle(.gray)
     }
     
+    private var customMailImage: some View {
+        Image(systemName: "envelope").foregroundStyle(.gray)
+    }
     private var secureTextField: some View {
         ZStack(alignment: .leading) {
             if text.isEmpty {
@@ -99,40 +104,4 @@ struct LabelAndTextFieldView: View {
     }
 }
 
-#Preview {
-    VStack {
-        LabelAndTextFieldView(
-            text: .constant(""),
-            label: "Email",
-            placeholder: "Enter your email"
-        )
-        
-        LabelAndTextFieldView(
-            text: .constant(""),
-            label: "Password",
-            placeholder: "Enter your password",
-            isPassword: true
-        )
-    }
-    .padding()
-}
-
-#Preview("ქართული") {
-    VStack {
-        LabelAndTextFieldView(
-            text: .constant(""),
-            label: "Email",
-            placeholder: "Enter your email"
-        )
-        
-        LabelAndTextFieldView(
-            text: .constant(""),
-            label: "Password",
-            placeholder: "Enter your password",
-            isPassword: true
-        )
-    }
-    .padding()
-    .environment(\.locale, Locale(identifier: "ka-GE"))
-}
 

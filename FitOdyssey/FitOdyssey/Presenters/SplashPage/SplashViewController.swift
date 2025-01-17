@@ -18,10 +18,18 @@ class SplashViewController: UIViewController {
         view.backgroundColor = .appBackground
         imageSetup()
         textSetup()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.goToNextPage()
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.goToNextPage()
+        }
+    }
+
     
     private func imageSetup() {
         view.addSubview(imageView)

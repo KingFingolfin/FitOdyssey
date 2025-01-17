@@ -10,8 +10,8 @@ import UIKit
 import FirebaseFirestore
 
 class MealsVC: UIViewController {
-    var profileViewModel = ProfileViewModel()
-    private var meals: [Meal] = [] 
+    var handbookViewModel = HandbookViewModel()
+    private var meals: [Meal] = []
     private var filteredMeals: [Meal] = []
     private let tableView = UITableView()
     private let searchBar = UISearchBar()
@@ -55,7 +55,7 @@ class MealsVC: UIViewController {
     }
 
     private func fetchMeals() {
-        profileViewModel.fetchMeals { [weak self] fetchedMeals in
+        handbookViewModel.fetchMeals { [weak self] fetchedMeals in
             DispatchQueue.main.async {
                 self?.meals = fetchedMeals
                 self?.filteredMeals = fetchedMeals
@@ -100,7 +100,7 @@ extension MealsVC: UISearchBarDelegate {
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder() // Dismiss the keyboard when the search button is tapped
+        searchBar.resignFirstResponder() 
     }
 }
 

@@ -13,9 +13,11 @@ class HandBookViewController: UIViewController {
             super.viewDidLoad()
             view.backgroundColor = .appBackground
             setupUI()
-            navigationController?.setNavigationBarHidden(false, animated: true)
         }
-        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
         private func setupUI() {
             
             let scrollView = UIScrollView()
@@ -67,12 +69,11 @@ class HandBookViewController: UIViewController {
         let gradientLayer = CAGradientLayer()
         // Use mostly black with orange just in the corner
         gradientLayer.colors = [
-            UIColor.black.withAlphaComponent(0.5).cgColor,
-            UIColor.appTabbarBack.withAlphaComponent(0.5).cgColor,
-            UIColor.orange.withAlphaComponent(0.5).cgColor,
+            UIColor.black.cgColor,
+            UIColor.appOrange.cgColor,
         ]
         // Adjust locations to push orange to the corner
-        gradientLayer.locations = [0.0, 0.7, 1.0]
+        gradientLayer.locations = [0.0, 1.0, 0.0]
         // Change direction to point to top right
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0)

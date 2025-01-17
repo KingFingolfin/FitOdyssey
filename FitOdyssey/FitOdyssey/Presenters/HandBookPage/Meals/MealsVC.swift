@@ -5,16 +5,16 @@
 //  Created by Giorgi on 16.01.25.
 //
 
-
 import UIKit
 import FirebaseFirestore
+import FirebaseStorage
 
 class MealsVC: UIViewController {
     var handbookViewModel = HandbookViewModel()
     private var meals: [Meal] = []
     private var filteredMeals: [Meal] = []
-    private let tableView = UITableView()
     private let searchBar = UISearchBar()
+    private var collectionView: UICollectionView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,32 +26,39 @@ class MealsVC: UIViewController {
         view.backgroundColor = .appBackground
         title = "Meals"
 
-        
+        // Setup search bar
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.delegate = self
         searchBar.placeholder = "Search meals by name"
         view.addSubview(searchBar)
 
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MealCell")
-        view.addSubview(tableView)
-        tableView.backgroundColor = .appBackground
+        // Setup collection view layout
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: view.frame.width / 2 - 16, height: 200)
+        layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        layout.minimumLineSpacing = 8
+        layout.minimumInteritemSpacing = 8
 
-        
+        // Setup collection view
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(MealCell.self, forCellWithReuseIdentifier: "MealCell")
+        collectionView.backgroundColor = .appBackground
+        view.addSubview(collectionView)
+
+        // Add constraints
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.topAnchor),
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-
     }
 
     private func fetchMeals() {
@@ -59,48 +66,113 @@ class MealsVC: UIViewController {
             DispatchQueue.main.async {
                 self?.meals = fetchedMeals
                 self?.filteredMeals = fetchedMeals
-                self?.tableView.reloadData()
+                self?.collectionView.reloadData()
             }
         }
     }
 }
 
-extension MealsVC: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+// MARK: - UICollectionView Delegate and DataSource
+extension MealsVC: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return filteredMeals.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MealCell", for: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MealCell", for: indexPath) as! MealCell
         let meal = filteredMeals[indexPath.row]
-        cell.textLabel?.text = meal.name // Adjust to match the Meal model
-        cell.textLabel?.numberOfLines = 0 // Support multiline names
+        cell.configure(with: meal)
         return cell
+        
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedMeal = filteredMeals[indexPath.row]
         let detailVC = MealDetailVC()
-        detailVC.meal = selectedMeal // Pass the selected meal
+        detailVC.meal = selectedMeal
         navigationController?.pushViewController(detailVC, animated: true)
     }
-
 }
 
+// MARK: - UISearchBarDelegate
 extension MealsVC: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            filteredMeals = meals // Show all meals if search text is empty
+            filteredMeals = meals
         } else {
             filteredMeals = meals.filter { $0.name.lowercased().contains(searchText.lowercased()) }
         }
-        tableView.reloadData()
+        collectionView.reloadData()
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder() 
+        searchBar.resignFirstResponder()
     }
 }
 
+// MARK: - MealCell
+class MealCell: UICollectionViewCell {
+    private let imageView = UIImageView()
+    private let nameLabel = UILabel()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setupUI() {
+        contentView.backgroundColor = .white
+        contentView.layer.cornerRadius = 8
+        contentView.layer.masksToBounds = true
+
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        nameLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        nameLabel.textAlignment = .center
+        nameLabel.numberOfLines = 0
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        contentView.addSubview(imageView)
+        contentView.addSubview(nameLabel)
+
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 140),
+
+            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+        ])
+    }
+
+    func configure(with meal: Meal) {
+        nameLabel.text = meal.name
+        loadImage(from: meal.image) // Assuming `imageURL` is part of the `Meal` model
+    }
+
+    private func loadImage(from urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        let storageRef = Storage.storage().reference(forURL: urlString)
+
+        storageRef.getData(maxSize: 10 * 1024 * 1024) { [weak self] data, error in
+            if let error = error {
+                print("Error loading image: \(error.localizedDescription)")
+                return
+            }
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self?.imageView.image = image
+                }
+            }
+        }
+    }
+}

@@ -14,7 +14,6 @@ class TabBarViewController: UITabBarController {
         super.viewDidLoad()
         setupTabBar()
         customizeTabBarAppearance()
-        self.delegate = self
     }
  
     private func setupTabBar() {
@@ -33,8 +32,15 @@ class TabBarViewController: UITabBarController {
             selectedImage: UIImage(systemName: "book")
         )
         
-        @State var showProfule = true
-        let profileView = ProfileView(showProfile: $showProfule)
+        let PageVC = HandBookViewController()
+        PageVC.tabBarItem = UITabBarItem(
+            title: nil,
+            image: UIImage(systemName: "book"),
+            selectedImage: UIImage(systemName: "book")
+        )
+        
+        @State var showProfile = true
+        let profileView = ProfileView(showProfile: $showProfile)
         let profileHostingController = UIHostingController(rootView: profileView)
         profileHostingController.tabBarItem = UITabBarItem(
             title: nil,
@@ -42,61 +48,37 @@ class TabBarViewController: UITabBarController {
             selectedImage: UIImage(systemName: "person.fill")
         )
  
-        self.viewControllers = [homeHostingController, mealsPageVC, profileHostingController]
-       
- 
-        if let items = tabBar.items {
-            for (index, item) in items.enumerated() {
-                if index == 4 {
-                    item.imageInsets = UIEdgeInsets(top: 2, left: 0, bottom: -2, right: 0)
-                } else {
-                    item.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
-                }
-            }
-        }
+        self.viewControllers = [homeHostingController, mealsPageVC, profileHostingController, PageVC]
  
         tabBar.tintColor = .white
         tabBar.unselectedItemTintColor = .gray
     }
- 
+    
     private func customizeTabBarAppearance() {
-        tabBar.backgroundColor = .appBackground
-        
-        let divider = UIView(frame: CGRect(x: 0, y: -2, width: tabBar.bounds.width, height: 0.5))
-        divider.backgroundColor = UIColor(hex: "000000").withAlphaComponent(0.1)
-//        tabBar.addSubview(divider)
-    }
- 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
- 
-        var tabBarFrame = tabBar.frame
-        tabBarFrame.size.height = 79
-        tabBarFrame.origin.y = view.frame.height - 79
-        tabBar.frame = tabBarFrame
-    }
-}
- 
-extension UIColor {
-    convenience init(hex: String, alpha: CGFloat = 1.0) {
-        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
- 
-        var rgb: UInt64 = 0
-        Scanner(string: hexSanitized).scanHexInt64(&rgb)
- 
-        let red = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
-        let green = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
-        let blue = CGFloat(rgb & 0x0000FF) / 255.0
- 
-        self.init(red: red, green: green, blue: blue, alpha: alpha)
-    }
-}
- 
-extension TabBarViewController: UITabBarControllerDelegate {
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        let isProfileSelected = tabBarController.selectedIndex == 4
-    }
+            tabBar.backgroundColor = .black
+            
+            // Set a corner radius to make it look like a long circle
+            tabBar.layer.cornerRadius = 30
+            tabBar.layer.masksToBounds = true
+            // Optionally, add a border to the tab bar
+            tabBar.layer.borderColor = UIColor.darkGray.cgColor
+            tabBar.layer.borderWidth = 1
+        }
+
+        override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            
+            // Adjust the tabBar frame to make it shorter and add margins
+            var tabBarFrame = tabBar.frame
+            tabBarFrame.size.height = 50 // Adjust height
+            tabBarFrame.size.width = view.frame.width - 40 // Add margins (20px on each side)
+            tabBarFrame.origin.y = view.frame.height - 80
+            tabBarFrame.origin.x = (view.frame.width - tabBarFrame.size.width) / 2
+            tabBar.frame = tabBarFrame
+            
+            // Ensure the corner radius matches the height for a smooth curve
+            tabBar.layer.cornerRadius = tabBarFrame.height / 2
+        }
 }
 
 

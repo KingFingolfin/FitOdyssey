@@ -13,6 +13,7 @@ class HandBookViewController: UIViewController {
             super.viewDidLoad()
             view.backgroundColor = .appBackground
             setupUI()
+            navigationController?.setNavigationBarHidden(false, animated: true)
         }
         
         private func setupUI() {
@@ -93,7 +94,7 @@ class HandBookViewController: UIViewController {
     class ExercisesVC: UIViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
-            view.backgroundColor = .white
+            view.backgroundColor = .red
             title = "Exercises"
         }
     }

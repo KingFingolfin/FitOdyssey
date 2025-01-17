@@ -70,10 +70,8 @@ struct LoginView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
-            
             .navigationDestination(isPresented: $viewModel.isLogedIn) {
-//                TabBarWrapperView(showProfile: $isLoggedIn)
-                TabBarWrapperView()
+                TabBarWrapperView().ignoresSafeArea()
             }
             .navigationDestination(isPresented: $navigateToRegisterPage) {
                 SignupView()

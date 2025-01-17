@@ -21,22 +21,22 @@ class TabBarViewController: UITabBarController {
         let homeHostingController = UIHostingController(rootView: homeView)
         homeHostingController.tabBarItem = UITabBarItem(
             title: nil,
-            image: UIImage(systemName: "house.fill"),
-            selectedImage: UIImage(systemName: "house.fill")
+            image: UIImage(named: "home"),
+            selectedImage: UIImage(named: "home")
         )
  
         let mealsPageVC = HandBookViewController()
         mealsPageVC.tabBarItem = UITabBarItem(
             title: nil,
-            image: UIImage(systemName: "book"),
-            selectedImage: UIImage(systemName: "book")
+            image: UIImage(named: "book"),
+            selectedImage: UIImage(named: "book")
         )
         
         let PageVC = HandBookViewController()
         PageVC.tabBarItem = UITabBarItem(
             title: nil,
-            image: UIImage(systemName: "book"),
-            selectedImage: UIImage(systemName: "book")
+            image: UIImage(named: "progress"),
+            selectedImage: UIImage(named: "progress")
         )
         
         @State var showProfile = true
@@ -44,41 +44,86 @@ class TabBarViewController: UITabBarController {
         let profileHostingController = UIHostingController(rootView: profileView)
         profileHostingController.tabBarItem = UITabBarItem(
             title: nil,
-            image: UIImage(systemName: "person.fill"),
-            selectedImage: UIImage(systemName: "person.fill")
+            image: UIImage(named: "settings"),
+            selectedImage: UIImage(named: "settings")
         )
  
-        self.viewControllers = [homeHostingController, mealsPageVC, profileHostingController, PageVC]
- 
-        tabBar.tintColor = .white
+        self.viewControllers = [homeHostingController, mealsPageVC, PageVC, profileHostingController]
+        
+        
+        tabBar.tintColor = .orange
         tabBar.unselectedItemTintColor = .gray
+        
+        tabBar.items?.forEach { item in
+                item.title = nil
+                item.imageInsets = .zero  // Reset any existing insets
+            }
     }
     
+    
     private func customizeTabBarAppearance() {
-            tabBar.backgroundColor = .black
-            
-            // Set a corner radius to make it look like a long circle
-            tabBar.layer.cornerRadius = 30
-            tabBar.layer.masksToBounds = true
-            // Optionally, add a border to the tab bar
-            tabBar.layer.borderColor = UIColor.darkGray.cgColor
-            tabBar.layer.borderWidth = 1
-        }
+        tabBar.backgroundColor = .appTabbarBack
 
-        override func viewDidLayoutSubviews() {
-            super.viewDidLayoutSubviews()
-            
-            // Adjust the tabBar frame to make it shorter and add margins
-            var tabBarFrame = tabBar.frame
-            tabBarFrame.size.height = 50 // Adjust height
-            tabBarFrame.size.width = view.frame.width - 40 // Add margins (20px on each side)
-            tabBarFrame.origin.y = view.frame.height - 80
-            tabBarFrame.origin.x = (view.frame.width - tabBarFrame.size.width) / 2
-            tabBar.frame = tabBarFrame
-            
-            // Ensure the corner radius matches the height for a smooth curve
-            tabBar.layer.cornerRadius = tabBarFrame.height / 2
+        // Set a corner radius to make it look like a long circle
+        tabBar.layer.cornerRadius = 30
+        tabBar.layer.masksToBounds = true
+
+        // Optionally, add a border to the tab bar
+        tabBar.layer.borderColor = UIColor.darkGray.cgColor
+        tabBar.layer.borderWidth = 1
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        var tabBarFrame = tabBar.frame
+        tabBarFrame.size.height = 50
+        tabBarFrame.size.width = view.frame.width - 40
+        tabBarFrame.origin.y = view.frame.height - 80
+        tabBarFrame.origin.x = (view.frame.width - tabBarFrame.size.width) / 2
+        tabBar.frame = tabBarFrame
+
+        tabBar.layer.cornerRadius = tabBarFrame.height / 2
+
+        // Configure image sizes and position
+        if let items = tabBar.items {
+            for item in items {
+                item.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
+                
+                // Configure the size for custom images
+                let imageSize: CGFloat = 24  // You can adjust this value
+                if let originalImage = item.image {
+                    let newImage = resizeImage(originalImage, targetSize: CGSize(width: imageSize, height: imageSize))
+                    item.image = newImage
+                }
+                if let originalSelectedImage = item.selectedImage {
+                    let newSelectedImage = resizeImage(originalSelectedImage, targetSize: CGSize(width: imageSize, height: imageSize))
+                    item.selectedImage = newSelectedImage
+                }
+            }
         }
+    }
+
+    // Add this helper method to resize images
+    private func resizeImage(_ image: UIImage, targetSize: CGSize) -> UIImage {
+        let size = image.size
+        
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        
+        let newSize = CGSize(width: size.width * widthRatio, height: size.height * heightRatio)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage ?? image
+    }
+
+
+
 }
 
 

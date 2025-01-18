@@ -17,6 +17,13 @@ class HandBookViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
+        
+        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysOriginal)
+        navigationController?.navigationBar.backIndicatorImage = backImage
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backImage
+        
+        navigationController?.navigationBar.tintColor = .orange
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
         private func setupUI() {
             
@@ -113,6 +120,7 @@ class HandBookViewController: UIViewController {
         
         @objc private func exercisesTapped() {
             let exercisesVC = ExercisesVC()
+            
             navigationController?.pushViewController(exercisesVC, animated: true)
         }
         
@@ -121,16 +129,6 @@ class HandBookViewController: UIViewController {
             navigationController?.pushViewController(mealsVC, animated: true)
         }
     }
-
-    
-    class ExercisesVC: UIViewController {
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            view.backgroundColor = .red
-            title = "Exercises"
-        }
-    }
-
 
 
 import SwiftUI

@@ -13,9 +13,18 @@ class HandBookViewController: UIViewController {
             super.viewDidLoad()
             view.backgroundColor = .appBackground
             setupUI()
-            navigationController?.setNavigationBarHidden(false, animated: true)
         }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
         
+        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysOriginal)
+        navigationController?.navigationBar.backIndicatorImage = backImage
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backImage
+        
+        navigationController?.navigationBar.tintColor = .orange
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
         private func setupUI() {
             
             let scrollView = UIScrollView()
@@ -63,17 +72,12 @@ class HandBookViewController: UIViewController {
         block.translatesAutoresizingMaskIntoConstraints = false
         block.heightAnchor.constraint(equalToConstant: 150).isActive = true
 
-        // Create gradient layer
         let gradientLayer = CAGradientLayer()
-        // Use mostly black with orange just in the corner
         gradientLayer.colors = [
-            UIColor.black.withAlphaComponent(0.5).cgColor,
-            UIColor.appTabbarBack.withAlphaComponent(0.5).cgColor,
-            UIColor.orange.withAlphaComponent(0.5).cgColor,
+            UIColor.black.cgColor,
+            UIColor.appOrange.cgColor,
         ]
-        // Adjust locations to push orange to the corner
-        gradientLayer.locations = [0.0, 0.7, 1.0]
-        // Change direction to point to top right
+        gradientLayer.locations = [0.0, 1.0, 0.0]
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0)
         gradientLayer.cornerRadius = 10
@@ -116,6 +120,7 @@ class HandBookViewController: UIViewController {
         
         @objc private func exercisesTapped() {
             let exercisesVC = ExercisesVC()
+            
             navigationController?.pushViewController(exercisesVC, animated: true)
         }
         
@@ -124,16 +129,6 @@ class HandBookViewController: UIViewController {
             navigationController?.pushViewController(mealsVC, animated: true)
         }
     }
-
-    
-    class ExercisesVC: UIViewController {
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            view.backgroundColor = .red
-            title = "Exercises"
-        }
-    }
-
 
 
 import SwiftUI

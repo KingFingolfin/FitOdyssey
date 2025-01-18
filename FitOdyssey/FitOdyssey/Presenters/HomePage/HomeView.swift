@@ -21,12 +21,3 @@ struct HomeView: View {
         
     }
 }
-
-
-class SettingsViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        navigationItem.title = "Settings"
-    }
-}

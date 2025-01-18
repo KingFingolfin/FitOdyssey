@@ -1,5 +1,5 @@
 //
-//  MealsVC.swift
+//  ExercisesVC.swift
 //  FitOdyssey
 //
 //  Created by Giorgi on 16.01.25.
@@ -9,10 +9,10 @@ import UIKit
 import FirebaseFirestore
 import FirebaseStorage
 
-class MealsVC: UIViewController {
+class ExercisesVC: UIViewController {
     var handbookViewModel = HandbookViewModel()
-    private var meals: [Meal] = []
-    private var filteredMeals: [Meal] = []
+    private var meals: [Exercise] = []
+    private var filteredMeals: [Exercise] = []
     private let searchBar = UISearchBar()
     private var collectionView: UICollectionView!
 
@@ -57,7 +57,7 @@ class MealsVC: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(MealCell.self, forCellWithReuseIdentifier: "MealCell")
+        collectionView.register(ExercisesCell.self, forCellWithReuseIdentifier: "ExercisesCell")
         collectionView.backgroundColor = .appBackground
         view.addSubview(collectionView)
 
@@ -74,7 +74,7 @@ class MealsVC: UIViewController {
     }
 
     private func fetchMeals() {
-        handbookViewModel.fetchMeals { [weak self] fetchedMeals in
+        handbookViewModel.fetchExercises { [weak self] fetchedMeals in
             DispatchQueue.main.async {
                 self?.meals = fetchedMeals
                 self?.filteredMeals = fetchedMeals
@@ -84,13 +84,13 @@ class MealsVC: UIViewController {
     }
 }
 
-extension MealsVC: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ExercisesVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return filteredMeals.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MealCell", for: indexPath) as! MealCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ExercisesCell", for: indexPath) as! ExercisesCell
         let meal = filteredMeals[indexPath.row]
         cell.tag = indexPath.row
         cell.configure(with: meal)
@@ -99,13 +99,13 @@ extension MealsVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedMeal = filteredMeals[indexPath.row]
-        let detailVC = MealDetailVC()
+        let detailVC = ExercisesDetailVC()
         detailVC.meal = selectedMeal
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
-extension MealsVC: UISearchBarDelegate {
+extension ExercisesVC: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             filteredMeals = meals
@@ -120,7 +120,7 @@ extension MealsVC: UISearchBarDelegate {
     }
 }
 
-class MealCell: UICollectionViewCell {
+class ExercisesCell: UICollectionViewCell {
     private let imageView = UIImageView()
     private let nameLabel = UILabel()
 
@@ -164,7 +164,7 @@ class MealCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with meal: Meal) {
+    func configure(with meal: Exercise) {
         nameLabel.text = meal.name
         imageView.image = nil
 

@@ -79,8 +79,7 @@ class SettingsViewController: UIViewController {
     }
     
     private func navigateToProfile() {
-        @State var show = true
-        let profileView = ProfileView(showProfile: $show)
+        let profileView = ProfileView()
         let hostingController = UIHostingController(rootView: profileView)
         navigationController?.pushViewController(hostingController, animated: true)
     }

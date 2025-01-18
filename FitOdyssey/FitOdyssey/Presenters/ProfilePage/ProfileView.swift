@@ -6,7 +6,7 @@ import FirebaseAuth
 
 struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
-    @Binding var showProfile: Bool
+    @State private var showProfile = true
     @State private var isImagePickerPresented = false
     @State private var isBeforeImagePickerPresented = false
     @Environment(\.dismiss) var dismiss

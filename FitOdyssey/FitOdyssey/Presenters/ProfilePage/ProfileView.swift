@@ -18,31 +18,6 @@ struct ProfileView: View {
                     if viewModel.isLoading {
                         ProgressView(LocalizedStringKey("Loading..."))
                             .frame(width: 120, height: 120)
-                    } else if let beforeImage = viewModel.beforeImage {
-                        Image(uiImage: beforeImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 120, height: 120)
-                            .clipShape(Circle())
-                            .onTapGesture {
-                                isBeforeImagePickerPresented.toggle()
-                            }
-                    } else {
-                        Image(.avatar)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 120, height: 120)
-                            .clipShape(Circle())
-                            .onTapGesture {
-                                isBeforeImagePickerPresented.toggle()
-                            }
-                    }
-                }
-                
-                VStack {
-                    if viewModel.isLoading {
-                        ProgressView(LocalizedStringKey("Loading..."))
-                            .frame(width: 120, height: 120)
                     } else if let profileImage = viewModel.profileImage {
                         Image(uiImage: profileImage)
                             .resizable()
@@ -92,68 +67,6 @@ struct ProfileView: View {
                         .padding(.horizontal)
                 }
                 
-                VStack(spacing: 5) {
-                    Text(LocalizedStringKey("Exercises:"))
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-                    
-                    List(viewModel.exercises) { exercise in
-                        HStack {
-                            if let url = URL(string: exercise.image) {
-                                AsyncImage(url: url) { image in
-                                    image.resizable()
-                                        .scaledToFit()
-                                        .frame(width: 50, height: 50)
-                                } placeholder: {
-                                    ProgressView()
-                                }
-                            } else {
-                                Image(systemName: "photo")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 50, height: 50)
-                            }
-                            
-                            VStack(alignment: .leading) {
-                                Text(exercise.name)
-                                    .font(.headline)
-                                Text(exercise.instructions)
-                                    .font(.subheadline)
-                                    .lineLimit(2)
-                            }
-                        }
-                    }
-                }
-                
-                HStack {
-                    Text(LocalizedStringKey("Language"))
-                        .foregroundColor(.gray)
-                        .padding(.leading)
-                }
-                .padding()
-                
-                HStack(spacing: 20) {
-                    Button(LocalizedStringKey("ქართული")) {
-                        print("Pressed Georgian")
-                    }
-                    .padding()
-                    .frame(width: 140)
-                    .background(.white)
-                    .foregroundColor(.black)
-                    .cornerRadius(10)
-                    
-                    Button(LocalizedStringKey("English")) {
-                        print("Pressed English")
-                    }
-                    .padding()
-                    .frame(width: 140)
-                    .background(.red)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                }
-                
                 Spacer()
                 
                 HStack {
@@ -178,8 +91,8 @@ struct ProfileView: View {
                     .cornerRadius(12)
                 }
             }}
-        .navigationBarBackButtonHidden(true)
-        .background(Color(red: 241/255, green: 242/255, blue: 246/255))
+        .navigationBarBackButtonHidden(false)
+        .background(.appBackground)
         .sheet(isPresented: $isImagePickerPresented) {
             ImagePicker(image: $viewModel.profileImage)
                 .onDisappear {

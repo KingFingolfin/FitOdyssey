@@ -39,16 +39,23 @@ class TabBarViewController: UITabBarController {
             selectedImage: UIImage(named: "progress")
         )
         
-        @State var showProfile = true
-        let profileView = ProfileView(showProfile: $showProfile)
-        let profileHostingController = UIHostingController(rootView: profileView)
-        profileHostingController.tabBarItem = UITabBarItem(
+        let settingsVC = SettingsViewController()
+        settingsVC.tabBarItem = UITabBarItem(
             title: nil,
             image: UIImage(named: "settings"),
             selectedImage: UIImage(named: "settings")
         )
- 
-        self.viewControllers = [homeHostingController, mealsPageVC, PageVC, profileHostingController]
+        
+//        @State var showProfile = true
+//        let profileView = ProfileView(showProfile: $showProfile)
+//        let profileHostingController = UIHostingController(rootView: profileView)
+//        profileHostingController.tabBarItem = UITabBarItem(
+//            title: nil,
+//            image: UIImage(named: "settings"),
+//            selectedImage: UIImage(named: "settings")
+//        )
+// 
+        self.viewControllers = [homeHostingController, mealsPageVC, PageVC, settingsVC]
         
         
         tabBar.tintColor = .orange

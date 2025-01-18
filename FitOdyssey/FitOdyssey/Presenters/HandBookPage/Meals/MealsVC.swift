@@ -25,21 +25,34 @@ class MealsVC: UIViewController {
     private func setupUI() {
         view.backgroundColor = .appBackground
         title = "Meals"
-
-        // Setup search bar
+        let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
+        
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.delegate = self
-        searchBar.placeholder = "Search meals by name"
+        searchBar.searchBarStyle = .minimal
         view.addSubview(searchBar)
 
-        // Setup collection view layout
+        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+            if let leftIconView = textField.leftView as? UIImageView {
+                leftIconView.tintColor = .gray
+                leftIconView.image = leftIconView.image?.withRenderingMode(.alwaysTemplate)
+            }
+            
+            textField.textColor = .white
+            textField.font = UIFont.systemFont(ofSize: 16)
+            textField.attributedPlaceholder = NSAttributedString(
+                string: "Search meals by name",
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
+            )
+        }
+
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.frame.width / 2 - 16, height: 200)
         layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         layout.minimumLineSpacing = 8
         layout.minimumInteritemSpacing = 8
 
-        // Setup collection view
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
@@ -48,7 +61,6 @@ class MealsVC: UIViewController {
         collectionView.backgroundColor = .appBackground
         view.addSubview(collectionView)
 
-        // Add constraints
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -72,20 +84,19 @@ class MealsVC: UIViewController {
     }
 }
 
-// MARK: - UICollectionView Delegate and DataSource
 extension MealsVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return filteredMeals.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MealCell", for: indexPath) as! MealCell
         let meal = filteredMeals[indexPath.row]
+        cell.tag = indexPath.row
         cell.configure(with: meal)
         return cell
-        
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedMeal = filteredMeals[indexPath.row]
         let detailVC = MealDetailVC()
@@ -94,7 +105,6 @@ extension MealsVC: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 }
 
-// MARK: - UISearchBarDelegate
 extension MealsVC: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
@@ -110,7 +120,6 @@ extension MealsVC: UISearchBarDelegate {
     }
 }
 
-// MARK: - MealCell
 class MealCell: UICollectionViewCell {
     private let imageView = UIImageView()
     private let nameLabel = UILabel()
@@ -125,7 +134,7 @@ class MealCell: UICollectionViewCell {
     }
 
     private func setupUI() {
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .appTextFieldBackGround
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
 
@@ -136,6 +145,7 @@ class MealCell: UICollectionViewCell {
         nameLabel.font = .systemFont(ofSize: 16, weight: .medium)
         nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 0
+        nameLabel.textColor = .white
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
 
         contentView.addSubview(imageView)
@@ -153,26 +163,36 @@ class MealCell: UICollectionViewCell {
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
         ])
     }
-
+    
     func configure(with meal: Meal) {
         nameLabel.text = meal.name
-        loadImage(from: meal.image) // Assuming `imageURL` is part of the `Meal` model
+        imageView.image = nil
+
+        loadImage(from: meal.image)
     }
 
     private func loadImage(from urlString: String) {
         guard let url = URL(string: urlString) else { return }
         let storageRef = Storage.storage().reference(forURL: urlString)
 
+        let currentTag = tag
+
         storageRef.getData(maxSize: 10 * 1024 * 1024) { [weak self] data, error in
+            guard let self = self else { return }
+
             if let error = error {
                 print("Error loading image: \(error.localizedDescription)")
                 return
             }
             if let data = data, let image = UIImage(data: data) {
                 DispatchQueue.main.async {
-                    self?.imageView.image = image
+                    if self.tag == currentTag {
+                        self.imageView.image = image
+                    }
                 }
             }
         }
     }
+    
+    
 }

@@ -65,16 +65,12 @@ class HandBookViewController: UIViewController {
         block.translatesAutoresizingMaskIntoConstraints = false
         block.heightAnchor.constraint(equalToConstant: 150).isActive = true
 
-        // Create gradient layer
         let gradientLayer = CAGradientLayer()
-        // Use mostly black with orange just in the corner
         gradientLayer.colors = [
             UIColor.black.cgColor,
             UIColor.appOrange.cgColor,
         ]
-        // Adjust locations to push orange to the corner
         gradientLayer.locations = [0.0, 1.0, 0.0]
-        // Change direction to point to top right
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0)
         gradientLayer.cornerRadius = 10

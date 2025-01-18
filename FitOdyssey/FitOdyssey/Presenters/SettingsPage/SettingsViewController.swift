@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import FirebaseAuth
 
 // Custom colors extension
 extension UIColor {
@@ -34,7 +35,22 @@ class SettingsViewController: UIViewController {
         SettingsItem(title: "Notifications", icon: "bell.fill", color: .orange) { },
         SettingsItem(title: "Feedback", icon: "envelope.fill", color: .orange) { },
         SettingsItem(title: "Report Bugs", icon: "ant.fill", color: .orange) { },
-        SettingsItem(title: "Logout", icon: "rectangle.portrait.and.arrow.right", color: .red) { }
+        SettingsItem(title: "Logout", icon: "rectangle.portrait.and.arrow.right", color: .red) { [weak self] in
+            guard let self = self else { return }
+               do {
+                   try Auth.auth().signOut() // Sign out the user from Firebase
+                   print("User logged out")
+                   
+                   // Redirect to LoginViewController
+                   let loginVC = LoginView() // Replace with your actual login VC
+                   let VCcontroler = UIHostingController(rootView: loginVC)
+                   let navigationController = UINavigationController(rootViewController: VCcontroler)
+                   navigationController.modalPresentationStyle = .fullScreen
+                   self.present(navigationController, animated: true, completion: nil)
+               } catch let error {
+                   print("Failed to log out: \(error.localizedDescription)")
+               }
+        }
     ]
     
     override func viewDidLoad() {
@@ -43,7 +59,6 @@ class SettingsViewController: UIViewController {
     }
     
     private func setupUI() {
-        title = "Settings"
         view.backgroundColor = .appBackground
         
         // Configure table view

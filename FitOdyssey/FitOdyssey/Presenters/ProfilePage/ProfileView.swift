@@ -48,7 +48,7 @@ struct ProfileView: View {
                     
                     TextField("", text: $viewModel.profile.name, prompt: Text(LocalizedStringKey("Full Name")))
                         .padding(20)
-                        .background(Color.white)
+                        .background(Color.appTextFieldBackGround)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .padding(.horizontal)
                 }
@@ -62,7 +62,7 @@ struct ProfileView: View {
                     
                     TextField("", text: $viewModel.profile.weight, prompt: Text(LocalizedStringKey("Weight")))
                         .padding(20)
-                        .background(Color.white)
+                        .background(Color.appTextFieldBackGround)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .padding(.horizontal)
                 }
@@ -76,19 +76,6 @@ struct ProfileView: View {
                     }
                     .foregroundColor(Color(red: 81/255, green: 89/255, blue: 246/255))
                     .fontWeight(.bold)
-                    
-                    Button(LocalizedStringKey("Log out")) {
-                        try? Auth.auth().signOut()
-                        dismiss()
-                        print("User logged out")
-                    }
-                    .padding()
-                    .font(.system(size: 20))
-                    .fontWeight(.bold)
-                    .frame(maxWidth: 135)
-                    .background(Color.red)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
                 }
             }}
         .navigationBarBackButtonHidden(false)
@@ -97,12 +84,6 @@ struct ProfileView: View {
             ImagePicker(image: $viewModel.profileImage)
                 .onDisappear {
                     viewModel.uploadProfileImage()
-                }
-        }
-        .sheet(isPresented: $isBeforeImagePickerPresented) {
-            ImagePicker(image: $viewModel.beforeImage)
-                .onDisappear {
-                    viewModel.uploadBeforeImage()
                 }
         }
     }

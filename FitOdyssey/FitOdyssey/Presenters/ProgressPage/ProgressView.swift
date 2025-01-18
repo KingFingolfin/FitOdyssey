@@ -1,14 +1,13 @@
 //
-//  LoginView.swift
+//  ProgressView.swift
 //  FitOdyssey
 //
 //  Created by Giorgi on 13.01.25.
 //
 
-//import FirebaseAuth
 import SwiftUI
 
-struct HomeView: View {
+struct ProgressPageView: View {
     
     
     var body: some View {
@@ -17,7 +16,7 @@ struct HomeView: View {
             HStack {
                 Spacer()
                 
-                Text("HOME")
+                Text("PROGRESS")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.white)

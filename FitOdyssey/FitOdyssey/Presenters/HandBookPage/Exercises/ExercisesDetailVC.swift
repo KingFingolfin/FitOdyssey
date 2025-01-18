@@ -76,7 +76,7 @@ class ExercisesDetailVC: UIViewController {
 
 
     private func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
+        guard let _ = URL(string: urlString) else { return }
 
         
         let storageRef = Storage.storage().reference(forURL: urlString)

@@ -12,7 +12,6 @@ struct SignupView: View {
     
     var body: some View {
         ScrollView{
-            NavigationStack {
                 VStack(spacing: 16) {
                     VStack {
                         Text("Create an Account")
@@ -95,15 +94,9 @@ struct SignupView: View {
                             .cornerRadius(12)
                     }
                     .padding(.bottom, 20)
-                    
-                    NavigationLink(
-                        destination: LoginView(),
-                        isActive: $viewModel.shouldNavigateToLogin,
-                        label: { EmptyView() }
-                    )
                 }
                 .padding(.horizontal, 24)
-            }
+            
         }.background(Color.appBackground.ignoresSafeArea())
     }
 }

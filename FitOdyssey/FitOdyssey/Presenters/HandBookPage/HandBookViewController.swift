@@ -9,15 +9,30 @@ import UIKit
 
 class HandBookViewController: UIViewController {
     
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            view.backgroundColor = .appBackground
-            setupUI()
-        }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        
+//        override func viewDidLoad() {
+//            super.viewDidLoad()
+//            view.backgroundColor = .appBackground
+//            setupUI()
+//        }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        navigationController?.setNavigationBarHidden(false, animated: true)
+//        
+//        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysOriginal)
+//        navigationController?.navigationBar.backIndicatorImage = backImage
+//        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backImage
+//        
+//        navigationController?.navigationBar.tintColor = .orange
+//        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+//    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .appBackground
+        setupNavigationBar()
+        setupUI()
+    }
+
+    private func setupNavigationBar() {
         let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysOriginal)
         navigationController?.navigationBar.backIndicatorImage = backImage
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = backImage
@@ -25,6 +40,22 @@ class HandBookViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .orange
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Remove this line as it's causing the jump
+        // navigationController?.setNavigationBarHidden(false, animated: true)
+        
+        // Just set up the back button appearance
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysOriginal)
+        navigationController?.navigationBar.backIndicatorImage = backImage
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backImage
+        
+        navigationController?.navigationBar.tintColor = .orange
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
         private func setupUI() {
             
             let scrollView = UIScrollView()

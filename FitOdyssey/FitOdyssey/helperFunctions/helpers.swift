@@ -17,16 +17,29 @@ import UIKit
 //    return rootViewController
 //}
 
-func getRootViewController() -> UIViewController {
-    var rootViewController = UIApplication.shared.windows.first?.rootViewController
+//func getRootViewController() -> UIViewController {
+//    var rootViewController = UIApplication.shared.windows.first?.rootViewController
+//
+//    while let presented = rootViewController?.presentedViewController {
+//        rootViewController = presented
+//    }
+//
+//    guard let finalRootViewController = rootViewController else {
+//        fatalError("Could not find root view controller.")
+//    }
+//    return finalRootViewController
+//}
 
-    while let presented = rootViewController?.presentedViewController {
+func getRootViewController() -> UIViewController {
+    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+          let window = windowScene.windows.first,
+          var rootViewController = window.rootViewController else {
+        fatalError("Could not find root view controller.")
+    }
+
+    while let presented = rootViewController.presentedViewController {
         rootViewController = presented
     }
 
-    guard let finalRootViewController = rootViewController else {
-        fatalError("Could not find root view controller.")
-    }
-    return finalRootViewController
+    return rootViewController
 }
-

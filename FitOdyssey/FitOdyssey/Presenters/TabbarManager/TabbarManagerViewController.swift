@@ -17,6 +17,7 @@ class TabBarViewController: UITabBarController {
     }
  
     private func setupTabBar() {
+        
         let homeView = HomeView()
         let homeHostingController = UIHostingController(rootView: homeView)
         homeHostingController.tabBarItem = UITabBarItem(
@@ -25,15 +26,16 @@ class TabBarViewController: UITabBarController {
             selectedImage: UIImage(named: "home")
         )
  
-        let mealsPageVC = HandBookViewController()
-        mealsPageVC.tabBarItem = UITabBarItem(
+        let bookVC = HandBookViewController()
+        bookVC.tabBarItem = UITabBarItem(
             title: nil,
             image: UIImage(named: "book"),
             selectedImage: UIImage(named: "book")
         )
         
-        let PageVC = HandBookViewController()
-        PageVC.tabBarItem = UITabBarItem(
+        let progressView = ProgressPageView()
+        let progressHostingController = UIHostingController(rootView: progressView)
+        progressHostingController.tabBarItem = UITabBarItem(
             title: nil,
             image: UIImage(named: "progress"),
             selectedImage: UIImage(named: "progress")
@@ -45,17 +47,7 @@ class TabBarViewController: UITabBarController {
             image: UIImage(named: "settings"),
             selectedImage: UIImage(named: "settings")
         )
-        
-//        @State var showProfile = true
-//        let profileView = ProfileView(showProfile: $showProfile)
-//        let profileHostingController = UIHostingController(rootView: profileView)
-//        profileHostingController.tabBarItem = UITabBarItem(
-//            title: nil,
-//            image: UIImage(named: "settings"),
-//            selectedImage: UIImage(named: "settings")
-//        )
-// 
-        self.viewControllers = [homeHostingController, mealsPageVC, PageVC, settingsVC]
+        self.viewControllers = [homeHostingController, bookVC, progressHostingController , settingsVC]
         
         
         tabBar.tintColor = .orange

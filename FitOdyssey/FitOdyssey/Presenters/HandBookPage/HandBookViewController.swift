@@ -9,22 +9,6 @@ import UIKit
 
 class HandBookViewController: UIViewController {
     
-//        override func viewDidLoad() {
-//            super.viewDidLoad()
-//            view.backgroundColor = .appBackground
-//            setupUI()
-//        }
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        navigationController?.setNavigationBarHidden(false, animated: true)
-//        
-//        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysOriginal)
-//        navigationController?.navigationBar.backIndicatorImage = backImage
-//        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backImage
-//        
-//        navigationController?.navigationBar.tintColor = .orange
-//        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-//    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .appBackground
@@ -160,22 +144,3 @@ class HandBookViewController: UIViewController {
             navigationController?.pushViewController(mealsVC, animated: true)
         }
     }
-
-
-import SwiftUI
-
-struct HandBookViewController_Preview: PreviewProvider {
-    static var previews: some View {
-        Preview()
-    }
-
-    struct Preview: UIViewControllerRepresentable {
-        func makeUIViewController(context: Context) -> UIViewController {
-            HandBookViewController()
-        }
-
-        func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-            
-        }
-    }
-}

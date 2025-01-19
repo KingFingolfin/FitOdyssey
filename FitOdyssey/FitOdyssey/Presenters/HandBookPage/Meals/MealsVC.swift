@@ -167,7 +167,7 @@ class MealCell: UICollectionViewCell {
     func configure(with meal: Meal) {
         nameLabel.text = meal.name
         imageView.image = nil
-
+        imageView.image = UIImage(named: "placeholder")
         loadImage(from: meal.image)
     }
 

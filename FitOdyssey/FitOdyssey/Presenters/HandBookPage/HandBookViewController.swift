@@ -27,10 +27,8 @@ class HandBookViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Remove this line as it's causing the jump
         // navigationController?.setNavigationBarHidden(false, animated: true)
         
-        // Just set up the back button appearance
         navigationController?.setNavigationBarHidden(false, animated: false)
         let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysOriginal)
         navigationController?.navigationBar.backIndicatorImage = backImage

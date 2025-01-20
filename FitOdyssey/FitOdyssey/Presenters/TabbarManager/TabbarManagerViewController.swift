@@ -17,8 +17,8 @@ class TabBarViewController: UITabBarController {
     }
  
     private func setupTabBar() {
-        
-        let homeView = HomeView()
+        let profileViewModel = ProfileViewModel()
+        let homeView = WorkoutView(profileViewModel: profileViewModel)
         let homeHostingController = UIHostingController(rootView: homeView)
         homeHostingController.tabBarItem = UITabBarItem(
             title: nil,

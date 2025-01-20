@@ -31,10 +31,27 @@ struct Measurements: Codable {
     var shoulders: Double = 0
 }
 
+//struct WorkoutPlan: Codable, Identifiable{
+//    @DocumentID var id: String?
+//    var name: String = ""
+//    var exerciseIds: [String]
+//    var exercises: [Exercise] = []
+//}
+
 struct WorkoutPlan: Codable, Identifiable {
-    @DocumentID var id: String?
+    var id: String? // Firestore document ID
     var name: String = ""
+    var exerciseIds: [String] = []
+    
+    // This is dynamically populated and not stored in Firestore
     var exercises: [Exercise] = []
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case exerciseIds
+    }
 }
+
 
 

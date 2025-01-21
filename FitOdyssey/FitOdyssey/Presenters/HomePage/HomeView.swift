@@ -184,7 +184,7 @@ struct AddWorkoutView: View {
                     guard !workoutName.isEmpty else { return }
 
                     profileViewModel.addWorkoutPlanToUser(name: workoutName, exercises: ["Wt5WBIb9MRLipTtkHcK9","Wt5WBIb9MRLipTtkHcK9","Wt5WBIb9MRLipTtkHcK9","Wt5WBIb9MRLipTtkHcK9"])
-                     
+                    
                     dismiss()
                 }
             )

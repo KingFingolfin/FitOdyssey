@@ -33,7 +33,7 @@ final class ProfileViewModel: ObservableObject {
     
     
     
-    private func fetchUser() {
+     func fetchUser() {
         guard let fromId = Auth.auth().currentUser?.uid else {
             print("User ID not found.")
             return

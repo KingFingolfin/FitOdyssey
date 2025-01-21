@@ -8,7 +8,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 struct User: Codable, Identifiable {
-    @DocumentID var id: String?
+    var id: String?
     let uid: String
     let email: String
     var name: String
@@ -20,7 +20,7 @@ struct User: Codable, Identifiable {
     var before_image: String = ""
     var after_image: String = ""
     var measurements: [Measurements] = []
-    var workoutPlans: [WorkoutPlan] = []
+    var workoutPlans: [String] = []
 }
 
 struct Measurements: Codable {
@@ -31,19 +31,11 @@ struct Measurements: Codable {
     var shoulders: Double = 0
 }
 
-//struct WorkoutPlan: Codable, Identifiable{
-//    @DocumentID var id: String?
-//    var name: String = ""
-//    var exerciseIds: [String]
-//    var exercises: [Exercise] = []
-//}
-
 struct WorkoutPlan: Codable, Identifiable {
-    var id: String? // Firestore document ID
+    var id: String?
     var name: String = ""
     var exerciseIds: [String] = []
-    
-    // This is dynamically populated and not stored in Firestore
+
     var exercises: [Exercise] = []
 
     private enum CodingKeys: String, CodingKey {

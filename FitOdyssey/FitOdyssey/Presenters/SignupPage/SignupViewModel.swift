@@ -142,27 +142,6 @@ final class SignUpViewModel: ObservableObject {
         }
     }
 
-//    func saveWorkoutPlan(plan: WorkoutPlan) {
-//        let firestore = Firestore.firestore()
-//        guard let userId = Auth.auth().currentUser?.uid else { return }
-//
-//        do {
-//            try firestore.collection("Users")
-//                .document(userId)
-//                .collection("WorkoutPlans")
-//                .document(plan.id ?? UUID().uuidString)
-//                .setData(from: plan) { error in
-//                    if let error = error {
-//                        print("Error saving workout plan: \(error.localizedDescription)")
-//                    } else {
-//                        print("Workout plan saved successfully.")
-//                    }
-//                }
-//        } catch {
-//            print("Failed saving workout plan.")
-//        }
-//    }
-
     
     func isValidEmail(_ email: String) -> Bool {
         let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"

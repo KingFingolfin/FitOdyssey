@@ -55,7 +55,7 @@ class TabBarViewController: UITabBarController {
         
         tabBar.items?.forEach { item in
                 item.title = nil
-                item.imageInsets = .zero  // Reset any existing insets
+                item.imageInsets = .zero
             }
     }
     
@@ -63,11 +63,10 @@ class TabBarViewController: UITabBarController {
     private func customizeTabBarAppearance() {
         tabBar.backgroundColor = .appTabbarBack
 
-        // Set a corner radius to make it look like a long circle
+        
         tabBar.layer.cornerRadius = 30
         tabBar.layer.masksToBounds = true
 
-        // Optionally, add a border to the tab bar
         tabBar.layer.borderColor = UIColor.darkGray.cgColor
         tabBar.layer.borderWidth = 1
     }
@@ -84,13 +83,12 @@ class TabBarViewController: UITabBarController {
 
         tabBar.layer.cornerRadius = tabBarFrame.height / 2
 
-        // Configure image sizes and position
         if let items = tabBar.items {
             for item in items {
                 item.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
                 
-                // Configure the size for custom images
-                let imageSize: CGFloat = 24  // You can adjust this value
+                
+                let imageSize: CGFloat = 24
                 if let originalImage = item.image {
                     let newImage = resizeImage(originalImage, targetSize: CGSize(width: imageSize, height: imageSize))
                     item.image = newImage
@@ -103,7 +101,6 @@ class TabBarViewController: UITabBarController {
         }
     }
 
-    // Add this helper method to resize images
     private func resizeImage(_ image: UIImage, targetSize: CGSize) -> UIImage {
         let size = image.size
         

@@ -12,7 +12,11 @@ final class ProfileViewModel: ObservableObject {
         weight: "",
         height: 0.0,
         gender: "",
-        ImageUrl: ""
+        ImageUrl: "",
+        before_image: "",
+        after_image: "",
+        measurements: [],
+        workoutPlans: []
     )
 
     @Published var profileImage: UIImage? = nil
@@ -21,17 +25,20 @@ final class ProfileViewModel: ObservableObject {
     @Published var shouldShowImagePicker: Bool = false
     @Published var meals: [Meal] = []
     @Published var exercises: [Exercise] = []
+    @Published var myWorkouts: [WorkoutPlan] = []
     
     init() {
         fetchUser()
     }
+    
+    
     
     private func fetchUser() {
         guard let fromId = Auth.auth().currentUser?.uid else {
             print("User ID not found.")
             return
         }
-        
+
         let firestore = Firestore.firestore()
         firestore.collection("Users")
             .document(fromId)
@@ -39,21 +46,179 @@ final class ProfileViewModel: ObservableObject {
                 if let error = error {
                     print("Failed fetching user: \(error)")
                 } else {
-                    let user = try? snapshot?.data(as: User.self)
-                    if let user = user {
-                        self.profile = user
-                        if !user.ImageUrl.isEmpty {
-                            self.loadProfileImage(from: user.ImageUrl)
+                    do {
+                        if let data = snapshot?.data() {
+                            let user = try Firestore.Decoder().decode(User.self, from: data)
+                            self.profile = user
+                            
+                            print("🟣 Workout Plans IDs: \(user.workoutPlans)")
+                            
+                            self.fetchWorkoutPlans(planIds: user.workoutPlans)
+                            
+                            if !user.ImageUrl.isEmpty {
+                                self.loadProfileImage(from: user.ImageUrl)
+                            }
+                            if !user.before_image.isEmpty {
+                                self.loadBeforeImage(from: user.before_image)
+                            }
                         }
-                        
-                        if !user.before_image.isEmpty {
-                            self.loadBeforeImage(from: user.before_image)
-                        }
+                    } catch {
+                        print("Error decoding user: \(error)")
                     }
                     print("User fetched successfully")
                 }
             }
     }
+
+    private func fetchWorkoutPlans(planIds: [String]) {
+        guard !planIds.isEmpty else {
+            print("No workout plans to fetch.")
+            return
+        }
+
+        let firestore = Firestore.firestore()
+
+        firestore.collection("Plans")
+            .whereField(FieldPath.documentID(), in: planIds)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Failed fetching workout plans: \(error)")
+                    return
+                }
+
+                do {
+                    var plans = try snapshot?.documents.compactMap { document -> WorkoutPlan? in
+                        var plan = try Firestore.Decoder().decode(WorkoutPlan.self, from: document.data())
+                        plan.id = document.documentID
+                        return plan
+                    } ?? []
+                    
+                    let allExerciseIds = plans.flatMap { $0.exerciseIds }
+                    if allExerciseIds.isEmpty {
+                        print("No exercise IDs found.")
+                        DispatchQueue.main.async {
+                            self.myWorkouts = plans
+                        }
+                        return
+                    }
+
+                    firestore.collection("Exercises")
+                        .whereField(FieldPath.documentID(), in: allExerciseIds)
+                        .getDocuments { snapshot, error in
+                            if let error = error {
+                                print("Error fetching exercises: \(error)")
+                                DispatchQueue.main.async {
+                                    self.myWorkouts = plans
+                                }
+                                return
+                            }
+
+                            var exerciseMap: [String: Exercise] = [:]
+                            snapshot?.documents.forEach { document in
+                                do {
+                                    let exercise = try document.data(as: Exercise.self)
+                                    if let id = exercise.id {
+                                        exerciseMap[id] = exercise
+                                    }
+                                } catch {
+                                    print("Error decoding exercise: \(error)")
+                                }
+                            }
+
+                            for i in 0..<plans.count {
+                                let exerciseIds = plans[i].exerciseIds
+                                plans[i].exercises = exerciseIds.compactMap { exerciseMap[$0] }
+                            }
+
+                            DispatchQueue.main.async {
+                                self.myWorkouts = plans
+                            }
+                            print("Workout plans fetched and updated successfully.")
+                        }
+                } catch {
+                    print("Error decoding workout plans: \(error)")
+                }
+            }
+    }
+    
+    
+    func addWorkoutPlanToUser(name: String, exercises: [String]) {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+
+        let firestore = Firestore.firestore()
+        let newPlanRef = firestore.collection("Plans").document()
+        
+        let workoutPlanData: [String: Any] = [
+            "name": name,
+            "exerciseIds": exercises.map { $0 }
+        ]
+        
+        newPlanRef.setData(workoutPlanData) { error in
+            if let error = error {
+                print("Failed to create workout plan: \(error.localizedDescription)")
+                return
+            }
+            
+            print("Workout plan created successfully.")
+            
+            let userRef = firestore.collection("Users").document(userId)
+            userRef.updateData([
+                "workoutPlans": FieldValue.arrayUnion([newPlanRef.documentID])
+            ]) { error in
+                if let error = error {
+                    print("Failed to update user with workout plan ID: \(error.localizedDescription)")
+                } else {
+                    print("User updated successfully with new workout plan ID.")
+                    
+                    self.fetchExercises(for: exercises) { fetchedExercises in
+                        let newPlan = WorkoutPlan(
+                            id: newPlanRef.documentID,
+                            name: name,
+                            exercises: fetchedExercises
+                        )
+                        
+                        DispatchQueue.main.async {
+                            self.myWorkouts.append(newPlan)
+                            self.profile.workoutPlans.append(newPlanRef.documentID)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func fetchExercises(for exerciseIds: [String], completion: @escaping ([Exercise]) -> Void) {
+        let firestore = Firestore.firestore()
+        
+        firestore.collection("Exercises")
+            .whereField(FieldPath.documentID(), in: exerciseIds)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Error fetching exercises: \(error.localizedDescription)")
+                    completion([])
+                    return
+                }
+                
+                guard let exerciseDocs = snapshot?.documents else {
+                    print("No exercises found.")
+                    completion([])
+                    return
+                }
+                
+                var exercises: [Exercise] = []
+                for document in exerciseDocs {
+                    do {
+                        let exercise = try document.data(as: Exercise.self)
+                        exercises.append(exercise)
+                    } catch {
+                        print("Error decoding exercise: \(error)")
+                    }
+                }
+                
+                completion(exercises)
+            }
+    }
+
     
     private func loadProfileImage(from urlString: String) {
         ImageManager.shared.fetchImage(from: urlString) { [weak self] image in
@@ -122,7 +287,6 @@ final class ProfileViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self?.profile.before_image = url
 
-                    // Update Firestore with the new URL
                     let db = Firestore.firestore()
                     db.collection("Users")
                         .document(user.uid)

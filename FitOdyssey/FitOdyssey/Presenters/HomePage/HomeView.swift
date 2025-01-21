@@ -24,9 +24,9 @@ struct WorkoutView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Header
                 HStack {
-                    Text("CREATE")
+                    
+                    Text("CREATE \(profileViewModel.profile.name)")
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
@@ -43,7 +43,6 @@ struct WorkoutView: View {
                 }
                 .padding()
                 
-                // Tab Selection
                 HStack(spacing: 0) {
                     TabButton(text: "WORKOUTS", isSelected: selectedTab == .workouts) {
                         selectedTab = .workouts
@@ -53,14 +52,14 @@ struct WorkoutView: View {
                     }
                 }
                 
-                // Sort Header
                 HStack {
                     Text("DATE")
                         .foregroundColor(.white)
                         .opacity(0.7)
                     Spacer()
                     Button(action: {
-                        // Sort action
+                       
+                        
                     }) {
                         HStack {
                             Image(systemName: "line.3.horizontal.decrease")
@@ -72,12 +71,11 @@ struct WorkoutView: View {
                 }
                 .padding()
                 
-                // Content based on selected tab
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         if selectedTab == .workouts {
-                            ForEach(handbookViewModel.exercises) { exercise in
-                                WorkoutCard(name: exercise.name, exerciseCount: 1)
+                            ForEach(profileViewModel.myWorkouts, id: \.name) { plan in
+                                PlanCard(plan: plan)
                             }
                         } else {
                             ForEach(handbookViewModel.workoutPlans, id: \.name) { plan in
@@ -117,7 +115,9 @@ struct WorkoutCard: View {
             Spacer()
             
             Button(action: {
-                // More options action
+                
+                
+                
             }) {
                 Image(systemName: "ellipsis")
                     .font(.title3)
@@ -141,12 +141,12 @@ struct PlanCard: View {
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                 
-                // Display exercise names, separated by commas
+                
                 if !plan.exercises.isEmpty {
                     Text(plan.exercises.map { $0.name }.joined(separator: ", "))
                         .font(.subheadline)
                         .foregroundColor(.gray)
-                        .lineLimit(2) // Limit to 2 lines, adjust as needed
+                        .lineLimit(2)
                 } else {
                     Text("No exercises")
                         .font(.subheadline)
@@ -173,15 +173,18 @@ struct AddWorkoutView: View {
             Form {
                 Section(header: Text("Workout Details")) {
                     TextField("Workout Name", text: $workoutName)
-                    // Add more fields as needed
+                    
                 }
             }
             .navigationTitle("Add Workout")
             .navigationBarItems(
                 leading: Button("Cancel") { dismiss() },
                 trailing: Button("Save") {
-                    // Add save logic here
                     
+                    guard !workoutName.isEmpty else { return }
+
+                    profileViewModel.addWorkoutPlanToUser(name: workoutName, exercises: ["Wt5WBIb9MRLipTtkHcK9","Wt5WBIb9MRLipTtkHcK9","Wt5WBIb9MRLipTtkHcK9","Wt5WBIb9MRLipTtkHcK9"])
+                     
                     dismiss()
                 }
             )

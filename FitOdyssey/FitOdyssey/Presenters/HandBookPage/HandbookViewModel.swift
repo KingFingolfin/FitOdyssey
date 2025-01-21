@@ -56,30 +56,15 @@ final class HandbookViewModel: ObservableObject {
                 }
                 let exercises = snapshot?.documents.compactMap { try? $0.data(as: Exercise.self) } ?? []
                 completion(exercises)
+                print("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥")
+                print(exercises)
             }
     }
-    
-//    func fetchWorkoutPlans(completion: @escaping ([WorkoutPlan]) -> Void) {
-//        let firestore = Firestore.firestore()
-//        firestore.collection("Plans")
-//            .getDocuments { snapshot, error in
-//                if let error = error {
-//                    print("Error fetching workout plans: \(error.localizedDescription)")
-//                    return
-//                }
-//                let plans = snapshot?.documents.compactMap { try? $0.data(as: WorkoutPlan.self) } ?? []
-//                completion(plans)
-//                
-//                print("🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴")
-//                print(plans)
-//            }
-//    }
     
     func fetchWorkoutPlans(completion: @escaping ([WorkoutPlan]) -> Void) {
         let firestore = Firestore.firestore()
         
-        // Step 1: Fetch Plans
-        firestore.collection("Plans").getDocuments { snapshot, error in
+        firestore.collection("BookPlans").getDocuments { snapshot, error in
             if let error = error {
                 print("Error fetching plans: \(error.localizedDescription)")
                 completion([])
@@ -92,7 +77,7 @@ final class HandbookViewModel: ObservableObject {
                 return
             }
             
-            // Parse plans and collect all exercise IDs
+            
             var workoutPlans: [WorkoutPlan] = []
             var allExerciseIds: Set<String> = []
             
@@ -106,14 +91,14 @@ final class HandbookViewModel: ObservableObject {
                 }
             }
             
-            // Step 2: Check for exercise IDs
+            
             if allExerciseIds.isEmpty {
                 print("No exercise IDs found.")
-                completion(workoutPlans) // Return plans without exercises
+                completion(workoutPlans)
                 return
             }
             
-            // Step 3: Fetch Exercises
+           
             firestore.collection("Exercises")
                 .whereField(FieldPath.documentID(), in: Array(allExerciseIds))
                 .getDocuments { snapshot, error in
@@ -129,7 +114,7 @@ final class HandbookViewModel: ObservableObject {
                         return
                     }
                     
-                    // Map exercises by ID
+                    
                     var exerciseMap: [String: Exercise] = [:]
                     for document in exerciseDocs {
                         do {
@@ -141,14 +126,12 @@ final class HandbookViewModel: ObservableObject {
                             print("Error decoding exercise: \(error)")
                         }
                     }
-                    
-                    // Map exercises to workout plans
+                   
                     for i in 0..<workoutPlans.count {
                         let exerciseIds = workoutPlans[i].exerciseIds
                         workoutPlans[i].exercises = exerciseIds.compactMap { exerciseMap[$0] }
                     }
                     
-                    // Return completed plans
                     completion(workoutPlans)
                 }
         }

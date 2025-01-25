@@ -56,21 +56,90 @@ final class HandbookViewModel: ObservableObject {
                 }
                 let exercises = snapshot?.documents.compactMap { try? $0.data(as: Exercise.self) } ?? []
                 completion(exercises)
+                print("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥")
+                print(exercises)
             }
     }
     
     func fetchWorkoutPlans(completion: @escaping ([WorkoutPlan]) -> Void) {
         let firestore = Firestore.firestore()
-        firestore.collection("Plans")
-            .getDocuments { snapshot, error in
-                if let error = error {
-                    print("Error fetching workout plans: \(error.localizedDescription)")
-                    return
-                }
-                let plans = snapshot?.documents.compactMap { try? $0.data(as: WorkoutPlan.self) } ?? []
-                completion(plans)
+        
+        firestore.collection("BookPlans").getDocuments { snapshot, error in
+            if let error = error {
+                print("Error fetching plans: \(error.localizedDescription)")
+                completion([])
+                return
             }
+            
+            guard let documents = snapshot?.documents else {
+                print("No plans found.")
+                completion([])
+                return
+            }
+            
+            
+            var workoutPlans: [WorkoutPlan] = []
+            var allExerciseIds: Set<String> = []
+            
+            for document in documents {
+                do {
+                    let plan = try document.data(as: WorkoutPlan.self)
+                    workoutPlans.append(plan)
+                    allExerciseIds.formUnion(plan.exerciseIds)
+                } catch {
+                    print("Error decoding plan: \(error)")
+                }
+            }
+            
+            
+            if allExerciseIds.isEmpty {
+                print("No exercise IDs found.")
+                completion(workoutPlans)
+                return
+            }
+            
+           
+            firestore.collection("Exercises")
+                .whereField(FieldPath.documentID(), in: Array(allExerciseIds))
+                .getDocuments { snapshot, error in
+                    if let error = error {
+                        print("Error fetching exercises: \(error.localizedDescription)")
+                        completion(workoutPlans)
+                        return
+                    }
+                    
+                    guard let exerciseDocs = snapshot?.documents else {
+                        print("No exercises found.")
+                        completion(workoutPlans)
+                        return
+                    }
+                    
+                    
+                    var exerciseMap: [String: Exercise] = [:]
+                    for document in exerciseDocs {
+                        do {
+                            let exercise = try document.data(as: Exercise.self)
+                            if let id = exercise.id {
+                                exerciseMap[id] = exercise
+                            }
+                        } catch {
+                            print("Error decoding exercise: \(error)")
+                        }
+                    }
+                   
+                    for i in 0..<workoutPlans.count {
+                        let exerciseIds = workoutPlans[i].exerciseIds
+                        workoutPlans[i].exercises = exerciseIds.compactMap { exerciseMap[$0] }
+                    }
+                    
+                    completion(workoutPlans)
+                }
+        }
     }
+
+
+    
+
 }
 
 

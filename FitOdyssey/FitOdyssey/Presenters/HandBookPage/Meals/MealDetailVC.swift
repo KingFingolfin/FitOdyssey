@@ -80,7 +80,7 @@ class MealDetailVC: UIViewController {
 
         
         let storageRef = Storage.storage().reference(forURL: urlString)
-        storageRef.getData(maxSize: 10 * 1024 * 1024) { [weak self] data, error in
+        storageRef.getData(maxSize: 1 * 1024 * 1024) { [weak self] data, error in
             if let error = error {
                 print("Error loading image: \(error.localizedDescription)")
                 return

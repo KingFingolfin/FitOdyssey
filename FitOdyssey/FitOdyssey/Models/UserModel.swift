@@ -8,7 +8,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 struct User: Codable, Identifiable {
-    @DocumentID var id: String?
+    var id: String?
     let uid: String
     let email: String
     var name: String
@@ -20,7 +20,7 @@ struct User: Codable, Identifiable {
     var before_image: String = ""
     var after_image: String = ""
     var measurements: [Measurements] = []
-    var workoutPlans: [WorkoutPlan] = []
+    var workoutPlans: [String] = []
 }
 
 struct Measurements: Codable {
@@ -32,9 +32,18 @@ struct Measurements: Codable {
 }
 
 struct WorkoutPlan: Codable, Identifiable {
-    @DocumentID var id: String?
+    var id: String?
     var name: String = ""
+    var exerciseIds: [String] = []
+
     var exercises: [Exercise] = []
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case exerciseIds
+    }
 }
+
 
 

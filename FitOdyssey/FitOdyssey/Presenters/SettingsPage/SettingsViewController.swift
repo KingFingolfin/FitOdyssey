@@ -9,7 +9,6 @@ import UIKit
 import SwiftUI
 import FirebaseAuth
 
-// Custom colors extension
 extension UIColor {
     static let darkBackground = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.0)
     static let cellBackground = UIColor(red: 0.15, green: 0.15, blue: 0.16, alpha: 1.0)
@@ -18,7 +17,7 @@ extension UIColor {
 
 struct SettingsItem {
     let title: String
-    let icon: String // SF Symbol name
+    let icon: String
     let color: UIColor
     let action: () -> Void
 }
@@ -38,11 +37,10 @@ class SettingsViewController: UIViewController {
         SettingsItem(title: "Logout", icon: "rectangle.portrait.and.arrow.right", color: .red) { [weak self] in
             guard let self = self else { return }
                do {
-                   try Auth.auth().signOut() // Sign out the user from Firebase
+                   try Auth.auth().signOut()
                    print("User logged out")
                    
-                   // Redirect to LoginViewController
-                   let loginVC = LoginView() // Replace with your actual login VC
+                   let loginVC = LoginView()
                    let VCcontroler = UIHostingController(rootView: loginVC)
                    let navigationController = UINavigationController(rootViewController: VCcontroler)
                    navigationController.modalPresentationStyle = .fullScreen
@@ -61,7 +59,6 @@ class SettingsViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .appBackground
         
-        // Configure table view
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .appBackground
@@ -85,7 +82,6 @@ class SettingsViewController: UIViewController {
     }
 }
 
-// MARK: - UITableViewDelegate & DataSource
 extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return settingsItems.count
@@ -99,7 +95,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70 // Increased cell height
+        return 70
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -108,12 +104,11 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-// MARK: - Custom Cell
 class SettingsCell: UITableViewCell {
     private let iconContainer: UIView = {
         let view = UIView()
         view.backgroundColor = .cellBackground
-        view.layer.cornerRadius = 25 // Make it round (half of the container size)
+        view.layer.cornerRadius = 25
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -129,7 +124,7 @@ class SettingsCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: 18) // Increased font size
+        label.font = .systemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -154,13 +149,13 @@ class SettingsCell: UITableViewCell {
         NSLayoutConstraint.activate([
             iconContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             iconContainer.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            iconContainer.widthAnchor.constraint(equalToConstant: 50), // Increased container size
-            iconContainer.heightAnchor.constraint(equalToConstant: 50), // Increased container size
+            iconContainer.widthAnchor.constraint(equalToConstant: 50),
+            iconContainer.heightAnchor.constraint(equalToConstant: 50),
             
             iconImageView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
             iconImageView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 24), // Increased icon size
-            iconImageView.heightAnchor.constraint(equalToConstant: 24), // Increased icon size
+            iconImageView.widthAnchor.constraint(equalToConstant: 24),
+            iconImageView.heightAnchor.constraint(equalToConstant: 24),
             
             titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -173,7 +168,6 @@ class SettingsCell: UITableViewCell {
         iconImageView.image = UIImage(systemName: item.icon)
         iconImageView.tintColor = item.color
         
-        // Special styling for logout
         if item.title == "Logout" {
             titleLabel.textColor = .red
         } else {

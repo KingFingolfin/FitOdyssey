@@ -177,7 +177,7 @@ class MealCell: UICollectionViewCell {
 
         let currentTag = tag
 
-        storageRef.getData(maxSize: 10 * 1024 * 1024) { [weak self] data, error in
+        storageRef.getData(maxSize: 1 * 1024 * 1024) { [weak self] data, error in
             guard let self = self else { return }
 
             if let error = error {

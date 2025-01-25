@@ -315,7 +315,8 @@ final class ProfileViewModel: ObservableObject {
                 weight: profile.weight,
                 height: profile.height,
                 gender: profile.gender,
-                ImageUrl: profile.ImageUrl
+                ImageUrl: profile.ImageUrl,
+                workoutPlans: profile.workoutPlans
             )
         try? db.collection("Users").document(uid)
             .setData(from: user) { error in
@@ -326,6 +327,46 @@ final class ProfileViewModel: ObservableObject {
             }
         }
     }
+    
+    
+    func deleteWorkoutPlan(planId: String) {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+
+        let firestore = Firestore.firestore()
+
+        // Remove the plan ID from the user's document
+        let userRef = firestore.collection("Users").document(userId)
+        userRef.updateData([
+            "workoutPlans": FieldValue.arrayRemove([planId])
+        ]) { error in
+            if let error = error {
+                print("Failed to remove workout plan from user: \(error.localizedDescription)")
+                return
+            }
+
+            print("Workout plan removed from user successfully.")
+
+            // Delete the plan document itself
+            firestore.collection("Plans").document(planId).delete { error in
+                if let error = error {
+                    print("Failed to delete workout plan document: \(error.localizedDescription)")
+                    return
+                }
+
+                print("Workout plan document deleted successfully.")
+
+                // Update the local state
+                DispatchQueue.main.async {
+                    self.myWorkouts.removeAll { $0.id == planId }
+                    self.profile.workoutPlans.removeAll { $0 == planId }
+                }
+            }
+        }
+    }
+
+    
+    
+    
 }
 
 

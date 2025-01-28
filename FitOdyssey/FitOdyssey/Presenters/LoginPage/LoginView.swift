@@ -188,9 +188,3 @@ struct LoginView: View {
 //        window.makeKeyAndVisible()
 //    }
 //}
-
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView()
-    }
-}

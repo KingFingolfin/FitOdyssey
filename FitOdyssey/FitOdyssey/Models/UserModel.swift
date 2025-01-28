@@ -12,9 +12,9 @@ struct User: Codable, Identifiable {
     let uid: String
     let email: String
     var name: String
-    var age: Int
-    var weight: String = ""
-    var height: Double
+    var age: String = ""
+//    var weight: String = ""
+    var height: String = ""
     var gender: String = ""
     var ImageUrl: String = ""
     var before_image: String = ""
@@ -29,6 +29,7 @@ struct Measurements: Codable {
     var chest: Double = 0
     var waist: Double = 0
     var shoulders: Double = 0
+    var weight: Double = 0
 }
 
 struct WorkoutPlan: Codable, Identifiable {

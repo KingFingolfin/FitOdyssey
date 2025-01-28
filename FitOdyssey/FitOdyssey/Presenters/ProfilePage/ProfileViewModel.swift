@@ -8,9 +8,8 @@ final class ProfileViewModel: ObservableObject {
         uid: "",
         email: "",
         name: "",
-        age: 0,
-        weight: "",
-        height: 0.0,
+        age: "",
+        height: "",
         gender: "",
         ImageUrl: "",
         before_image: "",
@@ -21,6 +20,7 @@ final class ProfileViewModel: ObservableObject {
 
     @Published var profileImage: UIImage? = nil
     @Published var beforeImage: UIImage? = nil
+    @Published var afterImage: UIImage? = nil
     @Published var isLoading: Bool = false
     @Published var shouldShowImagePicker: Bool = false
     @Published var meals: [Meal] = []
@@ -60,6 +60,9 @@ final class ProfileViewModel: ObservableObject {
                             }
                             if !user.before_image.isEmpty {
                                 self.loadBeforeImage(from: user.before_image)
+                            }
+                            if !user.after_image.isEmpty {
+                                self.loadAfterImage(from: user.after_image)
                             }
                         }
                     } catch {
@@ -229,6 +232,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     
+    
     private func loadBeforeImage(from urlString: String) {
         ImageManager.shared.fetchImage(from: urlString) { [weak self] image in
             DispatchQueue.main.async {
@@ -237,12 +241,19 @@ final class ProfileViewModel: ObservableObject {
         }
     }
 
+    private func loadAfterImage(from urlString: String) {
+        ImageManager.shared.fetchImage(from: urlString) { [weak self] image in
+            DispatchQueue.main.async {
+                self?.afterImage = image
+            }
+        }
+    }
     
     func updateProfile() {
         guard let user = Auth.auth().currentUser else { return }
         
         let changeRequest = user.createProfileChangeRequest()
-        changeRequest.displayName = profile.name + " " + "\(profile.weight)"
+        changeRequest.displayName = profile.name
         
         changeRequest.commitChanges { error in
             if let error = error {
@@ -303,6 +314,36 @@ final class ProfileViewModel: ObservableObject {
             }
         }
     }
+    
+    func uploadAfterImage() {
+        guard let afterImage = afterImage else {
+            print("No before image selected")
+            return
+        }
+
+        guard let user = Auth.auth().currentUser else { return }
+
+        ImageManager.shared.uploadImage(afterImage, for: "\(user.uid)_after") { [weak self] url in
+            if let url = url {
+                DispatchQueue.main.async {
+                    self?.profile.after_image = url
+
+                    let db = Firestore.firestore()
+                    db.collection("Users")
+                        .document(user.uid)
+                        .updateData(["after_image": url]) { error in
+                            if let error = error {
+                                print("Failed to update after_image in Firestore: \(error.localizedDescription)")
+                            } else {
+                                print("Before image updated successfully in Firestore.")
+                            }
+                        }
+                }
+            } else {
+                print("Failed to upload after image.")
+            }
+        }
+    }
 
     
     private func storeUserInfo(uid: String) {
@@ -312,10 +353,12 @@ final class ProfileViewModel: ObservableObject {
                 email: profile.email,
                 name: profile.name,
                 age: profile.age,
-                weight: profile.weight,
                 height: profile.height,
                 gender: profile.gender,
                 ImageUrl: profile.ImageUrl,
+                before_image: profile.before_image,
+                after_image: profile.after_image,
+                measurements: profile.measurements,
                 workoutPlans: profile.workoutPlans
             )
         try? db.collection("Users").document(uid)
@@ -334,7 +377,6 @@ final class ProfileViewModel: ObservableObject {
 
         let firestore = Firestore.firestore()
 
-        // Remove the plan ID from the user's document
         let userRef = firestore.collection("Users").document(userId)
         userRef.updateData([
             "workoutPlans": FieldValue.arrayRemove([planId])
@@ -355,7 +397,6 @@ final class ProfileViewModel: ObservableObject {
 
                 print("Workout plan document deleted successfully.")
 
-                // Update the local state
                 DispatchQueue.main.async {
                     self.myWorkouts.removeAll { $0.id == planId }
                     self.profile.workoutPlans.removeAll { $0 == planId }
@@ -366,7 +407,46 @@ final class ProfileViewModel: ObservableObject {
 
     
     
-    
+    func saveMeasurements(biceps: Double, shoulders: Double, waist: Double, chest: Double, weight: Double) {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+
+        let newMeasurement = Measurements(
+            date: Date(),
+            biceps: biceps,
+            chest: chest,
+            waist: waist,
+            shoulders: shoulders,
+            weight: weight
+        )
+
+        DispatchQueue.main.async {
+            self.profile.measurements.append(newMeasurement)
+        }
+
+        let db = Firestore.firestore()
+        let userRef = db.collection("Users").document(userId)
+
+        do {
+            let encodedMeasurement = try Firestore.Encoder().encode(newMeasurement)
+
+            userRef.updateData([
+                "measurements": FieldValue.arrayUnion([encodedMeasurement])
+            ]) { error in
+                if let error = error {
+                    print("Error saving measurements: \(error.localizedDescription)")
+                } else {
+                    print("Measurements saved successfully")
+                }
+            }
+        } catch {
+            print("Failed to encode measurement: \(error.localizedDescription)")
+        }
+    }
+
+        
+        func loadLatestMeasurements() -> Measurements? {
+            return profile.measurements.last
+        }
 }
 
 

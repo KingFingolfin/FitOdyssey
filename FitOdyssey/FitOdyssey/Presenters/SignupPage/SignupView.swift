@@ -100,9 +100,3 @@ struct SignupView: View {
         }.background(Color.appBackground.ignoresSafeArea())
     }
 }
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        SignupView()
-    }
-}

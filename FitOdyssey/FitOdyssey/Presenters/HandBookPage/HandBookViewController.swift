@@ -12,31 +12,9 @@ class HandBookViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .appBackground
-        setupNavigationBar()
         setupUI()
     }
 
-    private func setupNavigationBar() {
-        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysOriginal)
-        navigationController?.navigationBar.backIndicatorImage = backImage
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backImage
-        
-        navigationController?.navigationBar.tintColor = .orange
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // navigationController?.setNavigationBarHidden(false, animated: true)
-        
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysOriginal)
-        navigationController?.navigationBar.backIndicatorImage = backImage
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backImage
-        
-        navigationController?.navigationBar.tintColor = .orange
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-    }
     
         private func setupUI() {
             

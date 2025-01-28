@@ -85,24 +85,31 @@ final class SignUpViewModel: ObservableObject {
         }
     }
 
-    
     func saveUserInfo() {
         let firestore = Firestore.firestore()
         guard let uid = Auth.auth().currentUser?.uid else { return }
         guard let email = Auth.auth().currentUser?.email else { return }
+        
+        let initialMeasurement = Measurements(
+            date: Date(),
+            biceps: 0,
+            chest: 0,
+            waist: 0,
+            shoulders: 0,
+            weight: Double(weight) ?? 0
+        )
 
         let user = User(
             uid: uid,
             email: email,
             name: name,
-            age: Int(age) ?? 0,
-            weight: weight,
-            height: Double(height) ?? 0.0,
+            age: age,
+            height: height,
             gender: gender,
             ImageUrl: "",
             before_image: "",
             after_image: "",
-            measurements: [],
+            measurements: [initialMeasurement],
             workoutPlans: []
         )
 

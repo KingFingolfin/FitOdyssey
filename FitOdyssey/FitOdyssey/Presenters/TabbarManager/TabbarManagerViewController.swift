@@ -25,14 +25,15 @@ class TabBarViewController: UITabBarController {
             image: UIImage(named: "home"),
             selectedImage: UIImage(named: "home")
         )
- 
+
         let bookVC = HandBookViewController()
-        bookVC.tabBarItem = UITabBarItem(
+        let bookNavController = UINavigationController(rootViewController: bookVC)
+        bookNavController.tabBarItem = UITabBarItem(
             title: nil,
             image: UIImage(named: "book"),
             selectedImage: UIImage(named: "book")
         )
-        
+
         let progressView = ProgressPageView()
         let progressHostingController = UIHostingController(rootView: progressView)
         progressHostingController.tabBarItem = UITabBarItem(
@@ -40,25 +41,24 @@ class TabBarViewController: UITabBarController {
             image: UIImage(named: "progress"),
             selectedImage: UIImage(named: "progress")
         )
-        
+
         let settingsVC = SettingsViewController()
         settingsVC.tabBarItem = UITabBarItem(
             title: nil,
             image: UIImage(named: "settings"),
             selectedImage: UIImage(named: "settings")
         )
-        self.viewControllers = [homeHostingController, bookVC, progressHostingController , settingsVC]
-        
-        
+
+        self.viewControllers = [homeHostingController, bookNavController, progressHostingController, settingsVC]
+
         tabBar.tintColor = .orange
         tabBar.unselectedItemTintColor = .gray
-        
+
         tabBar.items?.forEach { item in
-                item.title = nil
-                item.imageInsets = .zero
-            }
+            item.title = nil
+            item.imageInsets = .zero
+        }
     }
-    
     
     private func customizeTabBarAppearance() {
         tabBar.backgroundColor = .appTabbarBack
@@ -131,3 +131,4 @@ struct TabBarWrapperView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: TabBarViewController, context: Context) {
     }
 }
+

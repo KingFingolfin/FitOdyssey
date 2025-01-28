@@ -24,13 +24,25 @@ struct AddWorkoutView: View {
     
     var body: some View {
         VStack(spacing: 15) {
-            TextField("Workout Plan Name", text: $workoutName)
-                .padding(10)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(8)
-                .padding(.horizontal)
-                .padding(.top, 20)
-                .foregroundStyle(.white)
+            
+            ZStack(alignment: .leading) {
+                        if workoutName.isEmpty {
+                            Text("Workout Plan Name")
+                                .foregroundColor(.gray)
+                                .padding(10)
+                                .padding(.top, 20)
+                                .padding(.horizontal)
+                        }
+                        
+                        TextField("", text: $workoutName)
+                            .padding(10)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(8)
+                            .foregroundColor(.white)
+                            .padding(.horizontal)
+                            .padding(.top, 20)
+                    }
+                    .padding(.horizontal)
             
             SearchBar(text: $searchText)
             

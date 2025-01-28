@@ -13,7 +13,6 @@ struct User: Codable, Identifiable {
     let email: String
     var name: String
     var age: String = ""
-//    var weight: String = ""
     var height: String = ""
     var gender: String = ""
     var ImageUrl: String = ""

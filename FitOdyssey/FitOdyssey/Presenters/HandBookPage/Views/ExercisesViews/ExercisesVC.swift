@@ -24,7 +24,7 @@ class ExercisesVC: UIViewController {
 
     private func setupUI() {
         view.backgroundColor = .appBackground
-        title = "Meals"
+        title = "Exercises"
         let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         
@@ -42,7 +42,7 @@ class ExercisesVC: UIViewController {
             textField.textColor = .white
             textField.font = UIFont.systemFont(ofSize: 16)
             textField.attributedPlaceholder = NSAttributedString(
-                string: "Search meals by name",
+                string: "Search exercises by name",
                 attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
             )
         }

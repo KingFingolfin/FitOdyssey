@@ -44,6 +44,7 @@ struct ProfileView: View {
                     Text("Tap to change profile picture")
                         .font(.caption)
                         .foregroundColor(.gray)
+                        .padding(.top, 5)
                 }
                 .padding(.top)
                 
@@ -69,13 +70,7 @@ struct ProfileView: View {
                             .font(.subheadline)
                             .foregroundColor(.gray)
                         
-                        Picker("Gender", selection: $viewModel.profile.gender) {
-                            ForEach(genderOptions, id: \.self) {
-                                Text(LocalizedStringKey($0))
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        .padding(.horizontal)
+                        CustomSegmentedPicker(selectedOption: $viewModel.profile.gender, options: genderOptions)
                     }
                     .padding(.horizontal)
                     

@@ -35,7 +35,7 @@ struct WheelNumberField: View {
                 }) {
                     HStack {
                         Text("\(value.isEmpty ? "--" : value) \(unit)")
-                            .foregroundColor(value.isEmpty ? .gray : .primary)
+                            .foregroundColor(.gray)
                         Spacer()
                         Image(systemName: "chevron.up.chevron.down")
                             .foregroundColor(.gray)

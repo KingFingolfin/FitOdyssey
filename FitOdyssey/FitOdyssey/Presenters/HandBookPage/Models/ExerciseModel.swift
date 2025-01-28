@@ -6,7 +6,7 @@
 //
 import FirebaseFirestore
 
-struct Exercise: Codable, Identifiable, Hashable {
+struct Exercise: Codable, Identifiable, Hashable{
     @DocumentID var id: String?
     var name: String = ""
     var image: String = ""

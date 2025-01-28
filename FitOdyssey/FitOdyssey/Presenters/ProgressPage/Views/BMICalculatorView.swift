@@ -31,7 +31,10 @@ struct BMICalculatorView: View {
                     
                     HStack {
                         TextField("Enter", value: $weight, formatter: NumberFormatter())
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(8)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(8)
+                            .foregroundColor(.white)
                             .keyboardType(.decimalPad)
                         
                         Picker("", selection: $weightUnit) {
@@ -40,6 +43,7 @@ struct BMICalculatorView: View {
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
+                        .accentColor(.orange)
                     }
                 }
                 
@@ -50,7 +54,10 @@ struct BMICalculatorView: View {
                     
                     HStack {
                         TextField("Enter", value: $height, formatter: NumberFormatter())
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(8)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(8)
+                            .foregroundColor(.white)
                             .keyboardType(.decimalPad)
                         
                         Picker("", selection: $heightUnit) {
@@ -59,6 +66,7 @@ struct BMICalculatorView: View {
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
+                        .accentColor(.orange)
                     }
                 }
             }
@@ -70,9 +78,12 @@ struct BMICalculatorView: View {
             VStack(spacing: 5) {
                 Text("BMI: \(bmiScore, specifier: "%.1f")")
                     .foregroundColor(.white)
+                    .padding(.bottom, 8)
                 
                 Text(bmiCategory)
-                    .foregroundColor(bmiCategoryColor)
+                    .foregroundStyle(.white)
+                    .padding()
+                    .background(bmiCategoryColor.opacity(0.2))
                     .fontWeight(.bold)
             }
         }

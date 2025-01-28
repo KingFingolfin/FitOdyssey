@@ -36,7 +36,7 @@ struct AddWorkoutView: View {
                         
                         TextField("", text: $workoutName)
                             .padding(10)
-                            .background(Color.gray.opacity(0.2))
+                            .background(Color.gray.opacity(0.6))
                             .cornerRadius(8)
                             .foregroundColor(.white)
                             .padding(.horizontal)

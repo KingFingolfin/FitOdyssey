@@ -32,7 +32,7 @@ class MealCell: UICollectionViewCell {
         nameLabel.font = .systemFont(ofSize: 16, weight: .medium)
         nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 0
-        nameLabel.textColor = .white
+        nameLabel.textColor = .gray
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
 
         contentView.addSubview(imageView)

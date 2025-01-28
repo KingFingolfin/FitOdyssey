@@ -13,3 +13,5 @@ struct Meal: Codable, Identifiable {
     var image: String = ""
     var recipe: String = ""
 }
+
+

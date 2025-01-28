@@ -21,6 +21,7 @@ struct ProfileField: View {
             TextField("", text: $text, prompt: Text(LocalizedStringKey(placeholder)))
                 .padding()
                 .background(Color.appTextFieldBackGround)
+                .foregroundColor(.gray)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .padding(.horizontal)

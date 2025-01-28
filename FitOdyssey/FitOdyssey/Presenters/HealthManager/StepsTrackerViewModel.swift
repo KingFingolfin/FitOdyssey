@@ -12,8 +12,8 @@ import HealthKit
 class StepsTrackerViewModel: ObservableObject {
     @Published var stepCount: Double = 0
     @Published var isHealthDataAvailable: Bool = false
-    @Published var goal: Double = 10000 // Default goal: 10,000 steps
-
+    @Published var goal: Double = 10000
+    
     private let healthStore = HKHealthStore()
 
     init() {
@@ -21,7 +21,6 @@ class StepsTrackerViewModel: ObservableObject {
         fetchStepsData()
     }
 
-    // Request permission to access HealthKit data
     func requestHealthDataAccess() {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
 
@@ -30,18 +29,20 @@ class StepsTrackerViewModel: ObservableObject {
             let typesToRead: Set = [stepType]
 
             healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
-                if success {
-                    self.isHealthDataAvailable = true
-                    self.fetchStepsData() // Fetch data after authorization
-                } else {
-                    self.isHealthDataAvailable = false
-                    print("Health data authorization failed: \(String(describing: error))")
+                DispatchQueue.main.async {
+                    if success {
+                        self.isHealthDataAvailable = true
+                        self.fetchStepsData() // Fetch data after authorization
+                    } else {
+                        self.isHealthDataAvailable = false
+                        print("Health data authorization failed: \(String(describing: error))")
+                    }
                 }
             }
         }
     }
 
-    // Fetch the step count data from HealthKit
+
     func fetchStepsData() {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let calendar = Calendar.current
@@ -67,7 +68,6 @@ class StepsTrackerViewModel: ObservableObject {
         healthStore.execute(query)
     }
 
-    // Reset step count (for new day)
     func resetStepsData() {
         stepCount = 0
     }
@@ -82,12 +82,11 @@ struct StepsTrackerView: View {
     var body: some View {
         VStack {
             if viewModel.isHealthDataAvailable {
-                // Circular Progress View
                 Circle()
-                    .trim(from: 0, to: CGFloat(viewModel.stepCount / viewModel.goal)) // Assuming goal is 10,000 steps
+                    .trim(from: 0, to: CGFloat(viewModel.stepCount / viewModel.goal))
                     .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
                     .foregroundColor(.blue)
-                    .rotationEffect(Angle(degrees: -90)) // Rotate to start from top
+                    .rotationEffect(Angle(degrees: -90))
                     .frame(width: 200, height: 200)
                     .overlay(
                         Text("\(Int(viewModel.stepCount))")
@@ -97,7 +96,7 @@ struct StepsTrackerView: View {
                     )
                     .padding()
 
-                // Step Goal Display
+               
                 Text("Step Goal: \(Int(viewModel.goal))")
                     .font(.headline)
                     .padding()
@@ -109,7 +108,7 @@ struct StepsTrackerView: View {
             }
         }
         .onAppear {
-            // Re-fetch data when view appears
+            
             viewModel.fetchStepsData()
         }
     }

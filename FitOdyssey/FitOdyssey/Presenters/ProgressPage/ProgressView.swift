@@ -44,6 +44,8 @@ struct ProgressPageView: View {
 //                    
 //                        .frame(width: 300, height: 500)
                     
+                    StepsTrackerView()
+                    
                     VStack(spacing: 20) {
                         BeforeAfterSection(
                             beforeImage: $profileViewModel.beforeImage,

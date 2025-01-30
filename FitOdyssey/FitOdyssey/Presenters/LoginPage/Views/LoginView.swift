@@ -82,6 +82,7 @@ struct LoginView: View {
                 isLoggedIn = true
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 
     

@@ -21,21 +21,26 @@ class SettingsViewController: UIViewController {
         SettingsItem(title: "Notifications", icon: "bell.fill", color: .orange) { },
         SettingsItem(title: "Feedback", icon: "envelope.fill", color: .orange) { },
         SettingsItem(title: "Report Bugs", icon: "ant.fill", color: .orange) { },
+        
         SettingsItem(title: "Logout", icon: "rectangle.portrait.and.arrow.right", color: .red) { [weak self] in
             guard let self = self else { return }
-               do {
-                   try Auth.auth().signOut()
-                   print("User logged out")
-                   
-                   let loginVC = LoginView()
-                   let VCcontroler = UIHostingController(rootView: loginVC)
-                   let navigationController = UINavigationController(rootViewController: VCcontroler)
-                   navigationController.modalPresentationStyle = .fullScreen
-                   self.present(navigationController, animated: true, completion: nil)
-               } catch let error {
-                   print("Failed to log out: \(error.localizedDescription)")
-               }
+            do {
+                try Auth.auth().signOut()
+                print("User logged out")
+
+                let loginVC = UIHostingController(rootView: LoginView())
+
+                if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? UIWindowSceneDelegate,
+                   let window = sceneDelegate.window {
+                    window?.rootViewController = loginVC
+                    window?.makeKeyAndVisible()
+                }
+            } catch let error {
+                print("Failed to log out: \(error.localizedDescription)")
+            }
         }
+
+
     ]
     
     override func viewDidLoad() {

@@ -106,6 +106,7 @@ struct LoginView: View {
             navigateToRegisterPage = true
         }
         .foregroundColor(.orange)
+        
     }
 
     
@@ -160,31 +161,3 @@ struct LoginView: View {
         }
     }
 }
-
-//func onLoginSuccess(showProfile: Binding<Bool>) {
-//    if let window = UIApplication.shared.windows.first {
-//        let tabBarController = UITabBarController()
-//        
-//        // Home (SwiftUI)
-//        let homeView = HomeView()
-//        let homeHostingController = UIHostingController(rootView: homeView)
-//        
-//        let profileView = ProfileView(showProfile: showProfile)
-//        let profileHostingController = UIHostingController(rootView: profileView)
-//        
-//        // UIKit view controllers
-//        let settingsViewController = SettingsViewController()  // UIKit
-//        
-//        // Set up tab bar items
-//        homeHostingController.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house.fill"), tag: 0)
-//        profileHostingController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.fill"), tag: 1)
-//        settingsViewController.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gear"), tag: 2)
-//        
-//        // Set the view controllers for the tab bar
-//        tabBarController.viewControllers = [homeHostingController, profileHostingController, settingsViewController]
-//        
-//        // Set the window's root view controller to the tab bar controller
-//        window.rootViewController = tabBarController
-//        window.makeKeyAndVisible()
-//    }
-//}

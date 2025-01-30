@@ -22,3 +22,5 @@ func getRootViewController() -> UIViewController {
 
     return rootViewController
 }
+
+let workoutImages = ["image1", "image2", "image3"]

@@ -50,13 +50,6 @@ struct MeasurementGraphView: View {
                 .font(.headline)
                 .foregroundColor(.white)
             
-//            Picker("Measurement", selection: $selectedMeasurement) {
-//                ForEach(["Biceps", "Chest", "Waist", "Shoulders", "Weight"], id: \.self) { measurement in
-//                    Text(measurement).tag(measurement)
-//                }
-//            }
-//            .pickerStyle(SegmentedPickerStyle())
-            
             CustomSegmentedPicker(selectedOption: $selectedMeasurement, options: ["Biceps", "Chest", "Waist", "Shoulders", "Weight"])
 
             if filteredData.isEmpty {

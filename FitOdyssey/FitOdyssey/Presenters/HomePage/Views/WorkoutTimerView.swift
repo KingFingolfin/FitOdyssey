@@ -129,18 +129,18 @@ struct WorkoutTimerView: View {
                 }
                 .padding()
             }
-            
             if viewModel.currentTimerSet != nil {
-                VStack {
-                    
+                VStack(spacing: 16) { 
                     Text(viewModel.timerMode == .exercise ? "Exercise" : "Recovery")
                         .foregroundColor(.white)
+                        .font(.title2)
+                        .fontWeight(.semibold)
                     
-                    HStack {
+                    HStack(spacing: 24) {
                         Button(action: { viewModel.adjustTime(by: -15) }) {
                             Image(systemName: "minus.circle.fill")
                                 .foregroundColor(.red)
-                                .font(.title)
+                                .font(.title2)
                         }
                         
                         Text(viewModel.timeString(from: viewModel.timeRemaining))
@@ -150,11 +150,11 @@ struct WorkoutTimerView: View {
                         Button(action: { viewModel.adjustTime(by: 15) }) {
                             Image(systemName: "plus.circle.fill")
                                 .foregroundColor(.green)
-                                .font(.title)
+                                .font(.title2)
                         }
                     }
                     
-                    HStack {
+                    HStack(spacing: 32) {
                         Button(action: { viewModel.isTimerRunning.toggle() }) {
                             Image(systemName: viewModel.isTimerRunning ? "pause.circle.fill" : "play.circle.fill")
                                 .font(.title)
@@ -169,9 +169,16 @@ struct WorkoutTimerView: View {
                     }
                 }
                 .padding()
-                .background(Color.gray.opacity(0.3))
-                .cornerRadius(50)
-                .shadow(radius: 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 30)
+                        .fill(Color.black)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 30)
+                                .stroke(Color.orange, lineWidth: 2)
+                                .shadow(color: Color.orange.opacity(0.5), radius: 10, x: 0, y: 0)
+                        )
+                )
+                .shadow(color: .black.opacity(0.5), radius: 20, x: 0, y: 8)
                 .position(timerPosition)
                 .gesture(
                     DragGesture()

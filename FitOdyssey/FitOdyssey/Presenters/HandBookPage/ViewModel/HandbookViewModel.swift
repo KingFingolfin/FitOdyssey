@@ -61,44 +61,43 @@ final class HandbookViewModel: ObservableObject {
             }
     }
     
+    
     func fetchWorkoutPlans(completion: @escaping ([WorkoutPlan]) -> Void) {
         let firestore = Firestore.firestore()
-        
+
         firestore.collection("BookPlans").getDocuments { snapshot, error in
             if let error = error {
-                print("Error fetching plans: \(error.localizedDescription)")
+                print("Error fetching workout plans: \(error.localizedDescription)")
                 completion([])
                 return
             }
-            
+
             guard let documents = snapshot?.documents else {
-                print("No plans found.")
+                print("No workout plans found.")
                 completion([])
                 return
             }
-            
-            
+
             var workoutPlans: [WorkoutPlan] = []
             var allExerciseIds: Set<String> = []
-            
+
             for document in documents {
                 do {
-                    let plan = try document.data(as: WorkoutPlan.self)
+                    var plan = try document.data(as: WorkoutPlan.self)
+                    plan.id = document.documentID
                     workoutPlans.append(plan)
                     allExerciseIds.formUnion(plan.exerciseIds)
                 } catch {
-                    print("Error decoding plan: \(error)")
+                    print("Error decoding workout plan: \(error)")
                 }
             }
-            
-            
+
             if allExerciseIds.isEmpty {
                 print("No exercise IDs found.")
                 completion(workoutPlans)
                 return
             }
-            
-           
+
             firestore.collection("Exercises")
                 .whereField(FieldPath.documentID(), in: Array(allExerciseIds))
                 .getDocuments { snapshot, error in
@@ -107,38 +106,27 @@ final class HandbookViewModel: ObservableObject {
                         completion(workoutPlans)
                         return
                     }
-                    
-                    guard let exerciseDocs = snapshot?.documents else {
-                        print("No exercises found.")
-                        completion(workoutPlans)
-                        return
-                    }
-                    
-                    
+
                     var exerciseMap: [String: Exercise] = [:]
-                    for document in exerciseDocs {
+                    for document in snapshot?.documents ?? [] {
                         do {
-                            let exercise = try document.data(as: Exercise.self)
-                            if let id = exercise.id {
-                                exerciseMap[id] = exercise
-                            }
+                            var exercise = try document.data(as: Exercise.self)
+                            exercise.id = document.documentID
+                            exerciseMap[exercise.id!] = exercise
                         } catch {
                             print("Error decoding exercise: \(error)")
                         }
                     }
-                   
+
                     for i in 0..<workoutPlans.count {
                         let exerciseIds = workoutPlans[i].exerciseIds
                         workoutPlans[i].exercises = exerciseIds.compactMap { exerciseMap[$0] }
                     }
-                    
+
                     completion(workoutPlans)
                 }
         }
     }
-
-
-    
 
 }
 

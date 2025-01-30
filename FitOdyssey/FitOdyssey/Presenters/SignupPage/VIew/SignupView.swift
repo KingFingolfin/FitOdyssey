@@ -9,9 +9,11 @@ import SwiftUI
 
 struct SignupView: View {
     @StateObject private var viewModel = SignUpViewModel()
+    @State private var isSignupSuccess = false
     
     var body: some View {
-        ScrollView{
+        VStack {
+            ScrollView {
                 VStack(spacing: 16) {
                     VStack {
                         Text("Create an Account")
@@ -84,6 +86,9 @@ struct SignupView: View {
                     Button(action: {
                         Task {
                             await viewModel.SignUp()
+                            if viewModel.isSuccess {
+                                isSignupSuccess = true
+                            }
                         }
                     }) {
                         Text("Sign Up")
@@ -96,7 +101,11 @@ struct SignupView: View {
                     .padding(.bottom, 20)
                 }
                 .padding(.horizontal, 24)
-            
-        }.background(Color.appBackground.ignoresSafeArea())
+            }
+            .background(Color.appBackground.ignoresSafeArea())
+            .navigationDestination(isPresented: $isSignupSuccess) {
+                TabBarWrapperView().ignoresSafeArea()
+            }
+        }
     }
 }

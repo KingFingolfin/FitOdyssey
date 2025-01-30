@@ -36,3 +36,4 @@ struct WorkoutPlanRowView: View {
         .cornerRadius(12)
     }
 }
+

@@ -28,24 +28,20 @@ struct ProgressPageView: View {
                 Color.appBackground.edgesIgnoringSafeArea(.all)
                 
                 ScrollView {
-//                    WaterTrackerView()
-//                        .preferredColorScheme(.dark)
-//                    
-//                        .frame(width: 300, height: 500)
                     
-                    StepsTrackerView()
+                    TabView {
+                                WaterTrackerView()
+                                    .preferredColorScheme(.dark)
+                                    .frame(width: 300, height: 500)
+                                
+                                StepsTrackerView()
+                                    .frame(width: 300, height: 500)
+                            }
+                            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                            .frame(height: 500)
                     
                     VStack(spacing: 20) {
-                        BeforeAfterSection(
-                            beforeImage: $profileViewModel.beforeImage,
-                            afterImage: $profileViewModel.afterImage,
-                            isBeforeImagePickerPresented: $isBeforeImagePickerPresented,
-                            isAfterImagePickerPresented: $isAfterImagePickerPresented
-                        )
-                        .padding()
-                        .background(Color.appBackground.opacity(0.8))
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
+                       
 
                         HStack(spacing: 5) {
                             MeasurementColumn(label: "Biceps", value: $biceps, color: .blue, maxHeight: 250)
@@ -64,6 +60,17 @@ struct ProgressPageView: View {
                         }
                         
                         MeasurementGraphView(measurements: $profileViewModel.profile.measurements)
+                        
+                        BeforeAfterSection(
+                            beforeImage: $profileViewModel.beforeImage,
+                            afterImage: $profileViewModel.afterImage,
+                            isBeforeImagePickerPresented: $isBeforeImagePickerPresented,
+                            isAfterImagePickerPresented: $isAfterImagePickerPresented
+                        )
+                        .padding()
+                        .background(Color.appBackground.opacity(0.8))
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
                         
                         BMICalculatorView(
                             weight: $weight,
@@ -91,7 +98,7 @@ struct ProgressPageView: View {
                 }
             }
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 loadLatestMeasurements()
                             }
             }

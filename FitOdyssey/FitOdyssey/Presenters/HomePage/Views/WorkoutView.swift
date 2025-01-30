@@ -72,14 +72,16 @@ struct WorkoutView: View {
                 } else {
                     List {
                         ForEach(handbookViewModel.workoutPlans) { plan in
-                            NavigationLink(destination: WorkoutTimerView(plan: plan)) {
-                                WorkoutPlanRowView(plan: plan)
-                            }.listRowBackground(Color.clear)
-                        }
+                                NavigationLink(destination: WorkoutTimerView(plan: plan)) {
+                                    WorkoutPlanRowView(plan: plan)
+                                }
+                                .listRowBackground(Color.clear)
+                            }
                     }
                     .listStyle(PlainListStyle())
                     .background(Color.clear)
                     .scrollContentBackground(.hidden)
+                    .padding(.top, 20)
                 }
             }
             .background(.appBackground)

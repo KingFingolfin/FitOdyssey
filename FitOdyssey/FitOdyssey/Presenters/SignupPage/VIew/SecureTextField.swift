@@ -4,7 +4,6 @@
 //
 //  Created by Giorgi on 13.01.25.
 //
-
 import SwiftUI
 
 struct SecureTextField: View {
@@ -25,19 +24,22 @@ struct SecureTextField: View {
                 ZStack(alignment: .leading) {
                     if text.isEmpty {
                         Text(placeholder)
-                            .foregroundColor(.white)
+                            .foregroundColor(.gray) 
                             .padding(.leading, 4)
                     }
-                    
-                    if isSecure {
-                        SecureField("", text: $text)
-                            .foregroundColor(.white)
-                            .autocapitalization(.none)
-                    } else {
-                        TextField("", text: $text)
-                            .foregroundColor(.white)
-                            .autocapitalization(.none)
+
+                    Group {
+                        if isSecure {
+                            SecureField("", text: $text)
+                                .foregroundColor(.white)
+                                .autocapitalization(.none)
+                        } else {
+                            TextField("", text: $text)
+                                .foregroundColor(.white)
+                                .autocapitalization(.none)
+                        }
                     }
+                    .padding(.leading, 8)
                 }
 
                 Button(action: { isSecure.toggle() }) {
@@ -56,4 +58,3 @@ struct SecureTextField: View {
         }
     }
 }
-

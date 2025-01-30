@@ -12,6 +12,11 @@ struct Meal: Codable, Identifiable {
     var name: String = ""
     var image: String = ""
     var recipe: String = ""
+    var ingredients: String = ""
+    var ingredientsNumber: String = ""
+    var kcal: String = ""
+    var time: String = ""
+    var level: String = ""
 }
 
 

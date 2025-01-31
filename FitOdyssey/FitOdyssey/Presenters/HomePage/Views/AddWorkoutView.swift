@@ -61,6 +61,8 @@ struct AddWorkoutView: View {
                 }.listRowBackground(Color.clear)
             }
             .listStyle(PlainListStyle())
+            .background(.appTabbarBack)
+            .scrollContentBackground(.hidden)
             
             
             SelectedExercisesView(selectedExercises: selectedExercises)

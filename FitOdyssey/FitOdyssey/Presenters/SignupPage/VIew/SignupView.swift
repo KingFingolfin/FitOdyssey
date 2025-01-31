@@ -10,19 +10,21 @@ import SwiftUI
 struct SignupView: View {
     @StateObject private var viewModel = SignUpViewModel()
     @State private var isSignupSuccess = false
-    
+
     var body: some View {
-        VStack {
+        ZStack {
+            Color.appBackground.edgesIgnoringSafeArea(.all) 
+            
             ScrollView {
                 VStack(spacing: 16) {
                     VStack {
                         Text("Create an Account")
                             .foregroundStyle(.white)
-                            .font(Font.system(size: 24, weight: .bold))
+                            .font(.system(size: 24, weight: .bold))
                             .padding(.top, 20)
                         Text("Help us finish setting up your account")
                             .foregroundStyle(.gray)
-                            .font(Font.system(size: 14))
+                            .font(.system(size: 14))
                     }
                     
                     VStack(spacing: 16) {
@@ -72,9 +74,7 @@ struct SignupView: View {
                         )
                     }
                     .padding(.top, 25)
-                    
-                    Spacer()
-                    
+
                     if let errorMessage = viewModel.statusMessage {
                         Text(errorMessage)
                             .font(.footnote)
@@ -82,7 +82,7 @@ struct SignupView: View {
                             .multilineTextAlignment(.center)
                             .padding(.bottom, 10)
                     }
-                    
+
                     Button(action: {
                         Task {
                             await viewModel.SignUp()
@@ -93,19 +93,21 @@ struct SignupView: View {
                     }) {
                         Text("Sign Up")
                             .frame(maxWidth: .infinity, minHeight: 64)
-                            .font(Font.custom("Inter", size: 20).weight(.semibold))
+                            .font(.system(size: 20, weight: .semibold))
                             .foregroundColor(.white)
-                            .background(.orange)
-                            .cornerRadius(12)
                     }
+                    .background(Color.orange)
+                    .cornerRadius(12)
+                    .padding(.horizontal, 24)
                     .padding(.bottom, 20)
                 }
                 .padding(.horizontal, 24)
+                .padding(.top, 10)
             }
-            .background(Color.appBackground.ignoresSafeArea())
-            .navigationDestination(isPresented: $isSignupSuccess) {
-                TabBarWrapperView().ignoresSafeArea()
-            }
+        }
+        .navigationDestination(isPresented: $isSignupSuccess) {
+            TabBarWrapperView().ignoresSafeArea()
         }
     }
 }
+

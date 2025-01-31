@@ -14,8 +14,13 @@ class SettingsViewController: UIViewController {
     
     private lazy var settingsItems: [SettingsItem] = [
         SettingsItem(title: "Account", icon: "person.fill", color: .orange) { [weak self] in
-            self?.navigateToProfile()
+            guard let self = self else {
+                print("self is nil")
+                return
+            }
+            self.navigateToProfile()
         },
+
         SettingsItem(title: "Password", icon: "lock.fill", color: .orange) { },
         SettingsItem(title: "Help", icon: "questionmark.circle.fill", color: .orange) { },
         SettingsItem(title: "Notifications", icon: "bell.fill", color: .orange) { },
@@ -70,8 +75,9 @@ class SettingsViewController: UIViewController {
     private func navigateToProfile() {
         let profileView = ProfileView()
         let hostingController = UIHostingController(rootView: profileView)
-        navigationController?.pushViewController(hostingController, animated: true)
+        present(hostingController, animated: true)
     }
+
 }
 
 extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {

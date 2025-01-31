@@ -18,50 +18,51 @@ struct LoginView: View {
             ZStack {
                 backgroundColor
                     .ignoresSafeArea()
-                
-                VStack {
-                    Image(.mainLogo)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 50)
-                        .padding(.bottom, 20)
-                    
-                    mainLabel
-                    
-                    LabelAndTextFieldView(
-                        text: $viewModel.email,
-                        label: "Email",
-                        placeholder: "Your email address"
-                    )
-                    .padding(.top)
-                    
-                    LabelAndTextFieldView(
-                        text: $viewModel.password,
-                        label: "Password",
-                        placeholder: "Your password",
-                        isPassword: true
-                    )
-                    
-                    loginButton
-                        .padding()
-                    
-                    HStack {
-                        newUserQuestionLabel
-                        Spacer()
-                        signUpButton
+                ScrollView{
+                    VStack {
+                        Image(.mainLogo)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 50)
+                            .padding(.bottom, 20)
+                        
+                        mainLabel
+                        
+                        LabelAndTextFieldView(
+                            text: $viewModel.email,
+                            label: "Email",
+                            placeholder: "Your email address"
+                        )
+                        .padding(.top)
+                        
+                        LabelAndTextFieldView(
+                            text: $viewModel.password,
+                            label: "Password",
+                            placeholder: "Your password",
+                            isPassword: true
+                        )
+                        
+                        loginButton
+                            .padding()
+                        
+                        HStack {
+                            newUserQuestionLabel
+                            Spacer()
+                            signUpButton
+                        }
+                        .padding(.leading, 32)
+                        .padding(.trailing, 18)
+                        
+                        
+                        
+                        continueWithGoogleButton
+                            .padding(.horizontal)
+                            .padding(.top, 100)
+                        
+                        
                     }
-                    .padding(.leading, 32)
-                    .padding(.trailing, 18)
-                    
-                    
-                    
-                    continueWithGoogleButton
-                        .padding(.horizontal)
-                        .padding(.top, 100)
-                    
-                    
+                    .padding()
                 }
-                .padding()
             }
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(
@@ -70,7 +71,10 @@ struct LoginView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
-            .navigationDestination(isPresented: $viewModel.isLogedIn) {
+//            .navigationDestination(isPresented: $viewModel.isLogedIn) {
+//                TabBarWrapperView().ignoresSafeArea()
+//            }
+            .fullScreenCover(isPresented: $viewModel.isLogedIn) {
                 TabBarWrapperView().ignoresSafeArea()
             }
             .navigationDestination(isPresented: $navigateToRegisterPage) {
@@ -79,10 +83,13 @@ struct LoginView: View {
         }
         .onAppear {
             if Auth.auth().currentUser != nil {
-                isLoggedIn = true
+                DispatchQueue.main.async {
+                            isLoggedIn = true
+                        }
             }
         }
         .navigationBarBackButtonHidden(true)
+        .tint(.appOrange)
     }
 
     
@@ -162,3 +169,4 @@ struct LoginView: View {
         }
     }
 }
+

@@ -13,11 +13,42 @@
 		C769DD062D344DC400A15282 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C769DD052D344DC400A15282 /* FirebaseAuth */; };
 		C769DD082D344DC400A15282 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C769DD072D344DC400A15282 /* FirebaseFirestore */; };
 		C769DD0A2D344DC400A15282 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = C769DD092D344DC400A15282 /* FirebaseStorage */; };
+		C7AC40A02D4D11520035D156 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7AC409F2D4D11520035D156 /* WidgetKit.framework */; };
+		C7AC40A22D4D11520035D156 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7AC40A12D4D11520035D156 /* SwiftUI.framework */; };
+		C7AC40AD2D4D11540035D156 /* myWidgetNameExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C7AC409E2D4D11520035D156 /* myWidgetNameExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C7AC40AB2D4D11540035D156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C769DCE02D344C9F00A15282 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C7AC409D2D4D11520035D156;
+			remoteInfo = myWidgetNameExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C7AC40B22D4D11540035D156 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C7AC40AD2D4D11540035D156 /* myWidgetNameExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		C769DCE82D344C9F00A15282 /* FitOdyssey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitOdyssey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C78B88612D3D70F8006E6112 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		C7AC409E2D4D11520035D156 /* myWidgetNameExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = myWidgetNameExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7AC409F2D4D11520035D156 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		C7AC40A12D4D11520035D156 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		C7AC40B32D4D16C90035D156 /* myWidgetNameExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = myWidgetNameExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -28,6 +59,13 @@
 			);
 			target = C769DCE72D344C9F00A15282 /* FitOdyssey */;
 		};
+		C7AC40B12D4D11540035D156 /* Exceptions for "myWidgetName" folder in "myWidgetNameExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C7AC409D2D4D11520035D156 /* myWidgetNameExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -37,6 +75,14 @@
 				C769DCFA2D344CA100A15282 /* Exceptions for "FitOdyssey" folder in "FitOdyssey" target */,
 			);
 			path = FitOdyssey;
+			sourceTree = "<group>";
+		};
+		C7AC40A32D4D11520035D156 /* myWidgetName */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C7AC40B12D4D11540035D156 /* Exceptions for "myWidgetName" folder in "myWidgetNameExtension" target */,
+			);
+			path = myWidgetName;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -55,13 +101,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C7AC409B2D4D11520035D156 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7AC40A22D4D11520035D156 /* SwiftUI.framework in Frameworks */,
+				C7AC40A02D4D11520035D156 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		C769DCDF2D344C9F00A15282 = {
 			isa = PBXGroup;
 			children = (
+				C7AC40B32D4D16C90035D156 /* myWidgetNameExtension.entitlements */,
 				C769DCEA2D344C9F00A15282 /* FitOdyssey */,
+				C7AC40A32D4D11520035D156 /* myWidgetName */,
 				C78B88602D3D70F8006E6112 /* Frameworks */,
 				C769DCE92D344C9F00A15282 /* Products */,
 			);
@@ -71,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				C769DCE82D344C9F00A15282 /* FitOdyssey.app */,
+				C7AC409E2D4D11520035D156 /* myWidgetNameExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -79,6 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				C78B88612D3D70F8006E6112 /* HealthKit.framework */,
+				C7AC409F2D4D11520035D156 /* WidgetKit.framework */,
+				C7AC40A12D4D11520035D156 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -93,10 +153,12 @@
 				C769DCE42D344C9F00A15282 /* Sources */,
 				C769DCE52D344C9F00A15282 /* Frameworks */,
 				C769DCE62D344C9F00A15282 /* Resources */,
+				C7AC40B22D4D11540035D156 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C7AC40AC2D4D11540035D156 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				C769DCEA2D344C9F00A15282 /* FitOdyssey */,
@@ -114,6 +176,28 @@
 			productReference = C769DCE82D344C9F00A15282 /* FitOdyssey.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C7AC409D2D4D11520035D156 /* myWidgetNameExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C7AC40AE2D4D11540035D156 /* Build configuration list for PBXNativeTarget "myWidgetNameExtension" */;
+			buildPhases = (
+				C7AC409A2D4D11520035D156 /* Sources */,
+				C7AC409B2D4D11520035D156 /* Frameworks */,
+				C7AC409C2D4D11520035D156 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C7AC40A32D4D11520035D156 /* myWidgetName */,
+			);
+			name = myWidgetNameExtension;
+			packageProductDependencies = (
+			);
+			productName = myWidgetNameExtension;
+			productReference = C7AC409E2D4D11520035D156 /* myWidgetNameExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -125,6 +209,9 @@
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					C769DCE72D344C9F00A15282 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					C7AC409D2D4D11520035D156 = {
 						CreatedOnToolsVersion = 16.1;
 					};
 				};
@@ -148,12 +235,20 @@
 			projectRoot = "";
 			targets = (
 				C769DCE72D344C9F00A15282 /* FitOdyssey */,
+				C7AC409D2D4D11520035D156 /* myWidgetNameExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C769DCE62D344C9F00A15282 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C7AC409C2D4D11520035D156 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -170,7 +265,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C7AC409A2D4D11520035D156 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C7AC40AC2D4D11540035D156 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C7AC409D2D4D11520035D156 /* myWidgetNameExtension */;
+			targetProxy = C7AC40AB2D4D11540035D156 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C769DCFC2D344CA100A15282 /* Debug */ = {
@@ -350,6 +460,64 @@
 			};
 			name = Release;
 		};
+		C7AC40AF2D4D11540035D156 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = myWidgetNameExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4HNGXHAAB4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = myWidgetName/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = myWidgetName;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.FitOdyssey.myWidgetName;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C7AC40B02D4D11540035D156 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = myWidgetNameExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4HNGXHAAB4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = myWidgetName/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = myWidgetName;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.FitOdyssey.myWidgetName;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -367,6 +535,15 @@
 			buildConfigurations = (
 				C769DCFC2D344CA100A15282 /* Debug */,
 				C769DCFD2D344CA100A15282 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C7AC40AE2D4D11540035D156 /* Build configuration list for PBXNativeTarget "myWidgetNameExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C7AC40AF2D4D11540035D156 /* Debug */,
+				C7AC40B02D4D11540035D156 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

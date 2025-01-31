@@ -70,7 +70,12 @@ class TabBarViewController: UITabBarController {
         tabBar.layer.borderColor = UIColor.darkGray.cgColor
         tabBar.layer.borderWidth = 1
     }
-
+    
+    private func setInitialBackgroundColor() {
+            
+            self.view.backgroundColor = .appBackground
+        }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 

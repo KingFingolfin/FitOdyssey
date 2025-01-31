@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import FirebaseAuth
 
 class SplashViewController: UIViewController {
     private let imageView = UIImageView()
@@ -70,11 +71,18 @@ class SplashViewController: UIViewController {
     }
     
     private func goToNextPage() {
-            let loginView = LoginView()
-            let hostingController = UIHostingController(rootView: loginView)
-            
-            hostingController.modalTransitionStyle = .crossDissolve
-            hostingController.modalPresentationStyle = .fullScreen
-            self.present(hostingController, animated: true, completion: nil)
+        if Auth.auth().currentUser != nil {
+            // User is logged in, go to main app
+            let mainView = UIHostingController(rootView: TabBarWrapperView().ignoresSafeArea())
+            mainView.modalTransitionStyle = .crossDissolve
+            mainView.modalPresentationStyle = .fullScreen
+            self.present(mainView, animated: true, completion: nil)
+        } else {
+            // User is NOT logged in, go to login page
+            let loginView = UIHostingController(rootView: LoginView())
+            loginView.modalTransitionStyle = .crossDissolve
+            loginView.modalPresentationStyle = .fullScreen
+            self.present(loginView, animated: true, completion: nil)
         }
+    }
 }

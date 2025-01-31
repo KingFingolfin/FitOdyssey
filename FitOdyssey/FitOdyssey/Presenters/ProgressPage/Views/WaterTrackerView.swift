@@ -6,19 +6,30 @@
 //
 
 
+
 import SwiftUI
+import WidgetKit
 
 struct WaterTrackerView: View {
-    @State private var currentWater: Double = UserDefaults.standard.double(forKey: "currentWater")
-    @State private var goal: Double = 3
+    @State private var currentWater: Double = UserDefaults(suiteName: "group.com.example.FitOdyssey")?.double(forKey: "currentWater") ?? 0
+    @State private var goal: Double = UserDefaults(suiteName: "group.com.example.FitOdyssey")?.double(forKey: "goal") ?? 3
     @State private var waterHeight: CGFloat = 0
     @State private var customGoal: String = "3"
-
-    let maxWater: Double = 3
-    @State private var resetTimer: Timer?
+    @State private var isEditing: Bool = false
+    
+    let containerHeight: CGFloat = 300
+    
+    let waterGradient = LinearGradient(
+        gradient: Gradient(colors: [
+            Color(red: 0.0, green: 0.7, blue: 0.9),
+            Color(red: 0.0, green: 0.4, blue: 0.9)
+        ]),
+        startPoint: .top,
+        endPoint: .bottom
+    )
 
     var body: some View {
-        HStack {
+        HStack(spacing: 20) {
             Button(action: {
                 if currentWater > 0 {
                     currentWater -= 1
@@ -26,65 +37,91 @@ struct WaterTrackerView: View {
                     saveWaterData()
                 }
             }) {
-                Image(systemName: "arrow.down.circle")
-                    .resizable()
-                    .frame(width: 44, height: 44)
-                    .foregroundColor(.blue)
+                Circle()
+                    .fill(Color.white.opacity(0.1))
+                    .frame(width: 60, height: 60)
+                    .overlay(
+                        Image(systemName: "minus")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(.white)
+                    )
+                    .shadow(color: Color.black.opacity(0.2), radius: 5, y: 2)
             }
-            .padding(.leading, 20)
-
+            
             VStack {
                 HStack {
-                    Text("Goal:")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-
-                    TextField("Goal", text: $customGoal)
-                        .textFieldStyle(PlainTextFieldStyle())
-                        .keyboardType(.decimalPad)
-                        .foregroundStyle(.white)
-                        .onSubmit {
-                            if let newGoal = Double(customGoal) {
+                    Text("Daily Goal:")
+                        .font(.system(size: 18, weight: .medium, design: .rounded))
+                        .foregroundColor(.white.opacity(0.9))
+                    
+                    TextField("Goal", text: $customGoal) { isEditing in
+                        self.isEditing = isEditing
+                    }
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.center)
+                    .frame(width: 60)
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                    .padding(8)
+                    .background(Color.white.opacity(0.1))
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                    )
+                    .onSubmit {
+                        if let newGoal = Double(customGoal), newGoal > 0 {
+                            if newGoal >= currentWater { // Restriction added
                                 goal = newGoal
+                                saveWaterData()
+                                updateWaterHeight()
+                            } else {
+                                // Reset the text field to the previous valid goal value
+                                customGoal = String(format: "%.1f", goal)
                             }
                         }
-                        .padding(10)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(8)
+                    }
+                    
+                    Text("L")
+                        .font(.system(size: 18, weight: .medium, design: .rounded))
+                        .foregroundColor(.white.opacity(0.9))
                 }
-                .padding()
-
-                ZStack {
-                    RoundedRectangle(cornerRadius: 30)
-                        .fill(Color.clear)
-                        .frame(width: 200, height: 300)
+                .padding(.top, 20)
+                
+                ZStack(alignment: .bottom) {
+                    Rectangle()
+                        .fill(Color.white.opacity(0.05))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 30)
-                                .stroke(Color.white.opacity(0.5), lineWidth: 2)
+                            Rectangle()
+                                .stroke(Color.white.opacity(0.1), lineWidth: 1)
                         )
-
-                    RoundedRectangle(cornerRadius: 30)
-                        .fill(LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.cyan]), startPoint: .top, endPoint: .bottom))
-                        .frame(width: 200, height: waterHeight)
-                        .cornerRadius(20)
+                        .frame(width: 200, height: containerHeight)
+                    
+                    Rectangle()
+                        .fill(waterGradient)
+                        .frame(width: 200, height: min(waterHeight, containerHeight))
+                        .overlay(
+                            WaveShape(progress: min(Double(currentWater / goal), 1.0))
+                                .fill(Color.white.opacity(0.1))
+                                .frame(height: 10)
+                                .offset(y: -5)
+                        )
+                        .overlay(
+                            BubblesView()
+                        )
                         .animation(.easeInOut(duration: 0.5), value: waterHeight)
-                        .position(x: 100, y: 328 - (waterHeight / 2))
+                    
+                    Text("\(String(format: "%.1f", currentWater))L")
+                        .font(.system(size: 32, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                        .offset(y: -160)
                 }
-
-                HStack {
-                    Text("Goal: \(Int(goal))L")
-                        .font(.headline)
-                        .foregroundStyle(.appOrange)
-                        .frame(width: 100)
-                    Spacer()
-                    Text("Water: \(Int(currentWater))L")
-                        .font(.headline)
-                        .foregroundStyle(.appOrange)
-                        .frame(width: 100)
-                }
-                .padding()
+                .shadow(color: Color.blue.opacity(0.3), radius: 10, y: 5)
+                .padding(.vertical, 40)
             }
-
+            
             Button(action: {
                 if currentWater < goal {
                     currentWater += 1
@@ -92,35 +129,42 @@ struct WaterTrackerView: View {
                     saveWaterData()
                 }
             }) {
-                Image(systemName: "arrow.up.circle")
-                    .resizable()
-                    .frame(width: 44, height: 44)
-                    .foregroundColor(.blue)
+                Circle()
+                    .fill(waterGradient)
+                    .frame(width: 60, height: 60)
+                    .overlay(
+                        Image(systemName: "plus")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(.white)
+                    )
+                    .shadow(color: Color.blue.opacity(0.3), radius: 5, y: 2)
             }
-            .padding(.trailing, 20)
         }
+        .padding(.horizontal)
         .onAppear {
+            customGoal = String(format: "%.1f", goal)
             checkForNewDay()
             updateWaterHeight()
-        }
-        .onChange(of: currentWater) { _ in
-            updateWaterHeight()
-            saveWaterData()
         }
     }
 
     func updateWaterHeight() {
-        waterHeight = CGFloat(currentWater / goal) * 300
+        let ratio = min(currentWater / goal, 1.0)
+        waterHeight = CGFloat(ratio) * containerHeight
     }
 
     func saveWaterData() {
-        UserDefaults.standard.set(currentWater, forKey: "currentWater")
-        UserDefaults.standard.set(Date(), forKey: "lastSavedDate")
+        let defaults = UserDefaults(suiteName: "group.com.example.FitOdyssey")
+        defaults?.set(currentWater, forKey: "currentWater")
+        defaults?.set(goal, forKey: "goal")
+        defaults?.set(Date(), forKey: "lastSavedDate")
+        reloadWidget()
     }
 
     func checkForNewDay() {
         let calendar = Calendar.current
-        if let lastSavedDate = UserDefaults.standard.object(forKey: "lastSavedDate") as? Date {
+        let defaults = UserDefaults(suiteName: "group.com.example.FitOdyssey")
+        if let lastSavedDate = defaults?.object(forKey: "lastSavedDate") as? Date {
             if !calendar.isDate(lastSavedDate, inSameDayAs: Date()) {
                 currentWater = 0
                 saveWaterData()
@@ -130,5 +174,188 @@ struct WaterTrackerView: View {
         }
     }
 }
+
+// Previous WaveShape and BubblesView remain unchanged
+
+// Wave shape for water effect (unchanged)
+struct WaveShape: Shape {
+    var progress: Double
+    
+    var animatableData: Double {
+        get { progress }
+        set { progress = newValue }
+    }
+    
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let progressHeight = rect.height * CGFloat(progress)
+        let width = rect.width
+        
+        path.move(to: CGPoint(x: 0, y: progressHeight))
+        
+        for x in stride(from: 0, to: width, by: 1) {
+            let relativeX = x / 50
+            let y = sin(relativeX) * 5
+            path.addLine(to: CGPoint(x: x, y: progressHeight + y))
+        }
+        
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: 0, y: rect.maxY))
+        path.closeSubpath()
+        
+        return path
+    }
+}
+
+// Animated bubbles view (unchanged)
+struct BubblesView: View {
+    var body: some View {
+        GeometryReader { geometry in
+            ForEach(0..<8) { index in
+                Circle()
+                    .fill(Color.white.opacity(Double.random(in: 0.1...0.3)))
+                    .frame(width: CGFloat.random(in: 4...8), height: CGFloat.random(in: 4...8))
+                    .offset(
+                        x: CGFloat.random(in: 0...geometry.size.width),
+                        y: CGFloat.random(in: 0...geometry.size.height)
+                    )
+                    .animation(
+                        Animation
+                            .linear(duration: Double.random(in: 2...4))
+                            .repeatForever(autoreverses: false)
+                            .delay(Double.random(in: 0...2)),
+                        value: UUID()
+                    )
+            }
+        }
+    }
+}
+
+func reloadWidget() {
+    WidgetCenter.shared.reloadAllTimelines()
+}
+
+//struct WaterTrackerView: View {
+//    @State private var currentWater: Double = UserDefaults.standard.double(forKey: "currentWater")
+//    @State private var goal: Double = 3
+//    @State private var waterHeight: CGFloat = 0
+//    @State private var customGoal: String = "3"
+//
+//    let maxWater: Double = 3
+//    @State private var resetTimer: Timer?
+//
+//    var body: some View {
+//        HStack {
+//            Button(action: {
+//                if currentWater > 0 {
+//                    currentWater -= 1
+//                    updateWaterHeight()
+//                    saveWaterData()
+//                }
+//            }) {
+//                Image(systemName: "arrow.down.circle")
+//                    .resizable()
+//                    .frame(width: 44, height: 44)
+//                    .foregroundColor(.blue)
+//            }
+//            .padding(.leading, 20)
+//
+//            VStack {
+//                HStack {
+//                    Text("Goal:")
+//                        .font(.headline)
+//                        .foregroundStyle(.white)
+//
+//                    TextField("Goal", text: $customGoal)
+//                        .textFieldStyle(PlainTextFieldStyle())
+//                        .keyboardType(.decimalPad)
+//                        .foregroundStyle(.white)
+//                        .onSubmit {
+//                            if let newGoal = Double(customGoal) {
+//                                goal = newGoal
+//                            }
+//                        }
+//                        .padding(10)
+//                        .background(Color.gray.opacity(0.2))
+//                        .cornerRadius(8)
+//                }
+//                .padding()
+//
+//                ZStack {
+//                    RoundedRectangle(cornerRadius: 30)
+//                        .fill(Color.clear)
+//                        .frame(width: 200, height: 300)
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 30)
+//                                .stroke(Color.white.opacity(0.5), lineWidth: 2)
+//                        )
+//
+//                    RoundedRectangle(cornerRadius: 30)
+//                        .fill(LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.cyan]), startPoint: .top, endPoint: .bottom))
+//                        .frame(width: 200, height: waterHeight)
+//                        .cornerRadius(20)
+//                        .animation(.easeInOut(duration: 0.5), value: waterHeight)
+//                        .position(x: 100, y: 328 - (waterHeight / 2))
+//                }
+//
+//                HStack {
+//                    Text("Goal: \(Int(goal))L")
+//                        .font(.headline)
+//                        .foregroundStyle(.appOrange)
+//                        .frame(width: 100)
+//                    Spacer()
+//                    Text("Water: \(Int(currentWater))L")
+//                        .font(.headline)
+//                        .foregroundStyle(.appOrange)
+//                        .frame(width: 100)
+//                }
+//                .padding()
+//            }
+//
+//            Button(action: {
+//                if currentWater < goal {
+//                    currentWater += 1
+//                    updateWaterHeight()
+//                    saveWaterData()
+//                }
+//            }) {
+//                Image(systemName: "arrow.up.circle")
+//                    .resizable()
+//                    .frame(width: 44, height: 44)
+//                    .foregroundColor(.blue)
+//            }
+//            .padding(.trailing, 20)
+//        }
+//        .onAppear {
+//            checkForNewDay()
+//            updateWaterHeight()
+//        }
+//        .onChange(of: currentWater) { _ in
+//            updateWaterHeight()
+//            saveWaterData()
+//        }
+//    }
+//
+//    func updateWaterHeight() {
+//        waterHeight = CGFloat(currentWater / goal) * 300
+//    }
+//
+//    func saveWaterData() {
+//        UserDefaults.standard.set(currentWater, forKey: "currentWater")
+//        UserDefaults.standard.set(Date(), forKey: "lastSavedDate")
+//    }
+//
+//    func checkForNewDay() {
+//        let calendar = Calendar.current
+//        if let lastSavedDate = UserDefaults.standard.object(forKey: "lastSavedDate") as? Date {
+//            if !calendar.isDate(lastSavedDate, inSameDayAs: Date()) {
+//                currentWater = 0
+//                saveWaterData()
+//            }
+//        } else {
+//            saveWaterData()
+//        }
+//    }
+//}
 
 

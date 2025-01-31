@@ -12,6 +12,8 @@ struct CustomTextField: View {
     @Binding var text: String
     var keyboardType: UIKeyboardType = .default
     
+    @FocusState private var isFocused: Bool
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
@@ -28,6 +30,7 @@ struct CustomTextField: View {
                     .foregroundColor(.white)
                     .keyboardType(keyboardType)
                     .font(.custom("Inter", size: 15))
+                    .focused($isFocused)
                 
                 if text.isEmpty {
                     Text(placeholder)
@@ -37,7 +40,10 @@ struct CustomTextField: View {
                         .allowsTightening(true)
                 }
             }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                isFocused = true
+            }
         }
     }
 }
-

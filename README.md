@@ -9,37 +9,37 @@ FitOdyssey is a comprehensive fitness tracking and workout planning app designed
 ## Screenshots
 
 <p align="center">
-   <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/on1.png?raw=true" alt="on1" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/on2.png?raw=true" alt="on2" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/on3.png?raw=true" alt="on3" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/createWorkout.png?raw=true" alt="createWorkout" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/exercises.png?raw=true" alt="exercises" width="18%" />
+   <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/on1.png?raw=true" alt="on1" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/on2.png?raw=true" alt="on2" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/on3.png?raw=true" alt="on3" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/createWorkout.png?raw=true" alt="createWorkout" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/exercises.png?raw=true" alt="exercises" width="18%" />
   
 </p>
 
 <p align="center">
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/graph.png?raw=true" alt="graph" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/handbook.png?raw=true" alt="handbook" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/login.png?raw=true" alt="login" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/mealDetails.png?raw=true" alt="mealDetails" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/meals.png?raw=true" alt="meals" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/graph.png?raw=true" alt="graph" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/handbook.png?raw=true" alt="handbook" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/login.png?raw=true" alt="login" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/mealDetails.png?raw=true" alt="mealDetails" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/meals.png?raw=true" alt="meals" width="18%" />
  
 </p>
 
 <p align="center">
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/beforeAfter.png?raw=true" alt="beforeAfter" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/bmi.png?raw=true" alt="bmi" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/profile.png?raw=true" alt="profile" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/settings.png?raw=true" alt="settings" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/steps.png?raw=true" alt="steps" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/beforeAfter.png?raw=true" alt="beforeAfter" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/bmi.png?raw=true" alt="bmi" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/profile.png?raw=true" alt="profile" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/settings.png?raw=true" alt="settings" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/steps.png?raw=true" alt="steps" width="18%" />
 </p>
 
 <p align="center">
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/timer.png?raw=true" alt="timer" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/water.png?raw=true" alt="water" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/widget.png?raw=true" alt="widget" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/workoutPlans.png?raw=true" alt="workoutPlans" width="18%" />
-  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/workoutTimer.png?raw=true" alt="workoutTimer" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/timer.png?raw=true" alt="timer" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/water.png?raw=true" alt="water" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/widget.png?raw=true" alt="widget" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/workoutPlans.png?raw=true" alt="workoutPlans" width="18%" />
+  <img src="https://github.com/KingFingolfin/FitOdyssey/blob/main/screenshots/workoutTimer.png?raw=true" alt="workoutTimer" width="18%" />
 </p>
 
 

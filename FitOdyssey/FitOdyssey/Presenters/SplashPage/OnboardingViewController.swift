@@ -22,19 +22,19 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     
     private func setupPages() {
         let page1 = OnboardingPageViewController(
-            imageName: "figure.walk",
-            title: "Get Stronger & Healthier",
+            imageName: "on1",
+            title: "Get Stronger",
             description: "Achieve your fitness goals with personalized workouts and nutrition plans."
         )
         
         let page2 = OnboardingPageViewController(
-            imageName: "target",
+            imageName: "on2",
             title: "Reach Your Goals",
             description: "Stay motivated and track your progress to reach your fitness milestones."
         )
         
         let page3 = OnboardingPageViewController(
-            imageName: "chart.bar.fill",
+            imageName: "on3",
             title: "Track Progress",
             description: "Monitor your workouts, weight, and achievements to see how far you've come."
         )
@@ -53,7 +53,7 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
         pageControl.pageIndicatorTintColor = .lightGray
-        pageControl.currentPageIndicatorTintColor = .blue
+        pageControl.currentPageIndicatorTintColor = .appOrange
         
         view.addSubview(pageControl)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
@@ -77,6 +77,7 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
         if let currentViewController = pageViewController.viewControllers?.first,
            let index = pages.firstIndex(of: currentViewController) {
             pageControl.currentPage = index
+            pageControl.isHidden = (index == pages.count - 1)
         }
     }
     

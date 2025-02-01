@@ -20,7 +20,7 @@ struct Provider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> ()) {
         let entry = loadData()
-        let timeline = Timeline(entries: [entry], policy: .atEnd) // Force reload after every entry
+        let timeline = Timeline(entries: [entry], policy: .atEnd)
         completion(timeline)
     }
 
@@ -29,11 +29,19 @@ struct Provider: TimelineProvider {
         var currentWater = defaults?.double(forKey: "currentWater") ?? 0
         var goal = defaults?.double(forKey: "goal") ?? 3
 
+        if currentWater == 0 || goal == 0 {
+            currentWater = 0
+            goal = 3
+            defaults?.set(currentWater, forKey: "currentWater")
+            defaults?.set(goal, forKey: "goal")
+        }
+
         currentWater = max(0, currentWater)
         goal = max(0.1, goal)
 
         return SimpleEntry(date: Date(), currentWater: currentWater, goal: goal)
     }
+
 }
 
 struct SimpleEntry: TimelineEntry {
@@ -45,11 +53,10 @@ struct SimpleEntry: TimelineEntry {
 struct WaterWidgetView: View {
     var entry: SimpleEntry
     
-    // Custom colors
     let waterGradient = LinearGradient(
         gradient: Gradient(colors: [
-            Color(red: 0.0, green: 0.7, blue: 0.9),  // Light blue
-            Color(red: 0.0, green: 0.4, blue: 0.9)   // Darker blue
+            Color(red: 0.0, green: 0.7, blue: 0.9),
+            Color(red: 0.0, green: 0.4, blue: 0.9)
         ]),
         startPoint: .top,
         endPoint: .bottom
@@ -57,8 +64,8 @@ struct WaterWidgetView: View {
     
     let backgroundGradient = LinearGradient(
         gradient: Gradient(colors: [
-            Color(red: 0.1, green: 0.1, blue: 0.2),  // Dark blue-grey
-            Color(red: 0.05, green: 0.05, blue: 0.1)  // Almost black
+            Color(red: 0.1, green: 0.1, blue: 0.2),
+            Color(red: 0.05, green: 0.05, blue: 0.1)
         ]),
         startPoint: .topLeading,
         endPoint: .bottomTrailing
@@ -67,13 +74,10 @@ struct WaterWidgetView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Background with gradient
                 backgroundGradient
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                // Main water container
                 ZStack(alignment: .bottom) {
-                    // Container for full height
                     Rectangle()
                         .fill(Color.white.opacity(0.05))
                         .overlay(
@@ -81,27 +85,23 @@ struct WaterWidgetView: View {
                                 .stroke(Color.white.opacity(0.1), lineWidth: 1)
                         )
                     
-                    // Water fill
                     Rectangle()
                         .fill(waterGradient)
                         .frame(
                             height: max(0, CGFloat(entry.currentWater / max(entry.goal, 0.1)) * geometry.size.height)
                         )
                         .overlay(
-                            // Dynamic wave effect
                             WaveShape(progress: Double(entry.currentWater / entry.goal))
                                 .fill(Color.white.opacity(0.1))
                                 .frame(height: 10)
                                 .offset(y: -5)
                         )
                         .overlay(
-                            // Animated bubbles
                             BubblesView()
                         )
                 }
                 .shadow(color: Color.blue.opacity(0.3), radius: 10, y: 5)
                 
-                // Progress text overlay
                 VStack(spacing: 2) {
                     Text("\(Int(entry.currentWater))L")
                         .font(.system(size: 28, weight: .bold, design: .rounded))
@@ -117,7 +117,6 @@ struct WaterWidgetView: View {
     }
 }
 
-// Wave shape for water effect
 struct WaveShape: Shape {
     var progress: Double
     
@@ -147,7 +146,6 @@ struct WaveShape: Shape {
     }
 }
 
-// Animated bubbles view
 struct BubblesView: View {
     var body: some View {
         GeometryReader { geometry in

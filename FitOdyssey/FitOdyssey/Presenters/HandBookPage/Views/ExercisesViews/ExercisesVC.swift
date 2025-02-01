@@ -4,22 +4,24 @@
 //
 //  Created by Giorgi on 16.01.25.
 //
-
 import UIKit
 import FirebaseFirestore
 import FirebaseStorage
+import Combine
 
-class ExercisesVC: UIViewController {
+final class ExercisesVC: UIViewController {
     var handbookViewModel = HandbookViewModel()
-    private var meals: [Exercise] = []
-    private var filteredMeals: [Exercise] = []
+    private var exercises: [Exercise] = []
+    private var filteredExercises: [Exercise] = []
     private let searchBar = UISearchBar()
     private var collectionView: UICollectionView!
+    private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        fetchMeals()
+        setupBindings()
+        handbookViewModel.fetchExercises()
     }
 
     private func setupUI() {
@@ -73,34 +75,36 @@ class ExercisesVC: UIViewController {
         ])
     }
 
-    private func fetchMeals() {
-        handbookViewModel.fetchExercises { [weak self] fetchedMeals in
-            DispatchQueue.main.async {
-                self?.meals = fetchedMeals
-                self?.filteredMeals = fetchedMeals
+    private func setupBindings() {
+        
+        handbookViewModel.$exercises
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] exercises in
+                self?.exercises = exercises
+                self?.filteredExercises = exercises
                 self?.collectionView.reloadData()
             }
-        }
+            .store(in: &cancellables)
     }
 }
 
 extension ExercisesVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filteredMeals.count
+        return filteredExercises.count // Use filteredExercises instead of filteredMeals
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ExercisesCell", for: indexPath) as! ExercisesCell
-        let meal = filteredMeals[indexPath.row]
+        let exercise = filteredExercises[indexPath.row]
         cell.tag = indexPath.row
-        cell.configure(with: meal)
+        cell.configure(with: exercise)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedMeal = filteredMeals[indexPath.row]
+        let selectedExercise = filteredExercises[indexPath.row]
         let detailVC = ExercisesDetailVC()
-        detailVC.meal = selectedMeal
+        detailVC.exercise = selectedExercise
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
@@ -108,9 +112,9 @@ extension ExercisesVC: UICollectionViewDelegate, UICollectionViewDataSource {
 extension ExercisesVC: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            filteredMeals = meals
+            filteredExercises = exercises
         } else {
-            filteredMeals = meals.filter { $0.name.lowercased().contains(searchText.lowercased()) }
+            filteredExercises = exercises.filter { $0.name.lowercased().contains(searchText.lowercased()) }
         }
         collectionView.reloadData()
     }
@@ -119,4 +123,3 @@ extension ExercisesVC: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
 }
-

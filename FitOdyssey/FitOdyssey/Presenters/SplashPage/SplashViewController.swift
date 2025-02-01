@@ -72,13 +72,11 @@ class SplashViewController: UIViewController {
     
     private func goToNextPage() {
         if Auth.auth().currentUser != nil {
-            // User is logged in, go to main app
             let mainView = UIHostingController(rootView: TabBarWrapperView().ignoresSafeArea())
             mainView.modalTransitionStyle = .crossDissolve
             mainView.modalPresentationStyle = .fullScreen
             self.present(mainView, animated: true, completion: nil)
         } else {
-            // User is NOT logged in, go to login page
             let loginView = UIHostingController(rootView: LoginView())
             loginView.modalTransitionStyle = .crossDissolve
             loginView.modalPresentationStyle = .fullScreen

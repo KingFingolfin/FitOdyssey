@@ -7,31 +7,35 @@
 
 
 import UIKit
-import FirebaseStorage
+import Combine
 
 class ExercisesDetailVC: UIViewController {
-    var meal: Exercise?
+    var exercise: Exercise?
+    private var viewModel = SharedImageViewModel()
+    private var cancellables = Set<AnyCancellable>()
 
-    private let mealImageView = UIImageView()
+    private let exerciseImageView = UIImageView()
     private let nameLabel = UILabel()
-    private let recipeLabel = UILabel()
+    private let instructionsLabel = UILabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        configureMealDetails()
+        setupBindings()
+        if let exercise = exercise {
+            configureExerciseDetails(exercise: exercise)
+            viewModel.loadImage(from: exercise.image)
+        }
     }
 
     private func setupUI() {
         view.backgroundColor = .appBackground
 
-        
-        mealImageView.translatesAutoresizingMaskIntoConstraints = false
-        mealImageView.contentMode = .scaleAspectFill
-        mealImageView.clipsToBounds = true
-        view.addSubview(mealImageView)
+        exerciseImageView.translatesAutoresizingMaskIntoConstraints = false
+        exerciseImageView.contentMode = .scaleAspectFill
+        exerciseImageView.clipsToBounds = true
+        view.addSubview(exerciseImageView)
 
-        
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.font = UIFont.boldSystemFont(ofSize: 24)
         nameLabel.textAlignment = .center
@@ -39,58 +43,39 @@ class ExercisesDetailVC: UIViewController {
         nameLabel.numberOfLines = 0
         view.addSubview(nameLabel)
 
-        
-        recipeLabel.translatesAutoresizingMaskIntoConstraints = false
-        recipeLabel.font = UIFont.systemFont(ofSize: 20)
-        recipeLabel.textColor = .white
-        recipeLabel.numberOfLines = 0
-        view.addSubview(recipeLabel)
+        instructionsLabel.translatesAutoresizingMaskIntoConstraints = false
+        instructionsLabel.font = UIFont.systemFont(ofSize: 18)
+        instructionsLabel.textColor = .white
+        instructionsLabel.numberOfLines = 0
+        view.addSubview(instructionsLabel)
 
-        
         NSLayoutConstraint.activate([
-            mealImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            mealImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            mealImageView.widthAnchor.constraint(equalToConstant: 200),
-            mealImageView.heightAnchor.constraint(equalToConstant: 200),
+            exerciseImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            exerciseImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            exerciseImageView.widthAnchor.constraint(equalToConstant: 200),
+            exerciseImageView.heightAnchor.constraint(equalToConstant: 200),
 
-            nameLabel.topAnchor.constraint(equalTo: mealImageView.bottomAnchor, constant: 20),
+            nameLabel.topAnchor.constraint(equalTo: exerciseImageView.bottomAnchor, constant: 20),
             nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 
-            recipeLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
-            recipeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            recipeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            instructionsLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
+            instructionsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            instructionsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
         ])
     }
 
-    private func configureMealDetails() {
-        guard let meal = meal else { return }
-        nameLabel.text = meal.name
-        recipeLabel.text = meal.instructions
-
-        
-        if !meal.image.isEmpty {
-            loadImage(from: meal.image)
-        }
+    private func setupBindings() {
+        viewModel.$image
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] image in
+                self?.exerciseImageView.image = image
+            }
+            .store(in: &cancellables)
     }
 
-
-    private func loadImage(from urlString: String) {
-        guard let _ = URL(string: urlString) else { return }
-
-        
-        let storageRef = Storage.storage().reference(forURL: urlString)
-        storageRef.getData(maxSize: 10 * 1024 * 1024) { [weak self] data, error in
-            if let error = error {
-                print("Error loading image: \(error.localizedDescription)")
-                return
-            }
-            if let data = data {
-                DispatchQueue.main.async {
-                    self?.mealImageView.image = UIImage(data: data)
-                }
-            }
-        }
+    private func configureExerciseDetails(exercise: Exercise) {
+        nameLabel.text = exercise.name
+        instructionsLabel.text = exercise.instructions
     }
 }
-

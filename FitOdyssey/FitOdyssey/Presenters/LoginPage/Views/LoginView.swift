@@ -71,9 +71,6 @@ struct LoginView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
-//            .navigationDestination(isPresented: $viewModel.isLogedIn) {
-//                TabBarWrapperView().ignoresSafeArea()
-//            }
             .fullScreenCover(isPresented: $viewModel.isLogedIn) {
                 TabBarWrapperView().ignoresSafeArea()
             }

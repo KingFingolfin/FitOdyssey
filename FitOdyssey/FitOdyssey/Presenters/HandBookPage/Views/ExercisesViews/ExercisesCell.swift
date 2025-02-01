@@ -4,17 +4,19 @@
 //
 //  Created by Giorgi on 28.01.25.
 //
-
 import UIKit
-import FirebaseStorage
+import Combine
 
 class ExercisesCell: UICollectionViewCell {
     private let imageView = UIImageView()
     private let nameLabel = UILabel()
+    private var viewModel = SharedImageViewModel()
+    private var cancellables = Set<AnyCancellable>()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        setupBindings()
     }
 
     required init?(coder: NSCoder) {
@@ -26,17 +28,16 @@ class ExercisesCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
 
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(imageView)
 
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.font = .systemFont(ofSize: 16, weight: .medium)
         nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 0
         nameLabel.textColor = .gray
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        contentView.addSubview(imageView)
         contentView.addSubview(nameLabel)
 
         NSLayoutConstraint.activate([
@@ -51,36 +52,19 @@ class ExercisesCell: UICollectionViewCell {
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
         ])
     }
-    
-    func configure(with meal: Exercise) {
-        nameLabel.text = meal.name
-        imageView.image = nil
 
-        loadImage(from: meal.image)
+    private func setupBindings() {
+        viewModel.$image
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] image in
+                self?.imageView.image = image
+            }
+            .store(in: &cancellables)
     }
 
-    private func loadImage(from urlString: String) {
-        guard let _ = URL(string: urlString) else { return }
-        let storageRef = Storage.storage().reference(forURL: urlString)
-
-        let currentTag = tag
-
-        storageRef.getData(maxSize: 10 * 1024 * 1024) { [weak self] data, error in
-            guard let self = self else { return }
-
-            if let error = error {
-                print("Error loading image: \(error.localizedDescription)")
-                return
-            }
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    if self.tag == currentTag {
-                        self.imageView.image = image
-                    }
-                }
-            }
-        }
+    func configure(with exercise: Exercise) {
+        nameLabel.text = exercise.name
+        imageView.image = UIImage(named: "placeholder")
+        viewModel.loadImage(from: exercise.image)
     }
-    
-    
 }

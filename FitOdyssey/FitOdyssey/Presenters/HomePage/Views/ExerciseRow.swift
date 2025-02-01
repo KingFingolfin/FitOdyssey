@@ -4,20 +4,19 @@
 //
 //  Created by Giorgi on 28.01.25.
 //
-
 import SwiftUI
-import FirebaseStorage
+import Combine
 
 struct ExerciseRow: View {
     let exercise: Exercise
     let isSelected: Bool
     let onTap: () -> Void
     
-    @State private var exerciseImage: UIImage? = nil
+    @StateObject private var viewModel = SharedImageViewModel()
     
     var body: some View {
         HStack {
-            if let image = exerciseImage {
+            if let image = viewModel.image {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
@@ -30,7 +29,7 @@ struct ExerciseRow: View {
                     .cornerRadius(10)
                     .overlay(ProgressView().padding(), alignment: .center)
                     .onAppear {
-                        loadImage(from: exercise.image)
+                        viewModel.loadImage(from: exercise.image)
                     }
             }
             
@@ -49,22 +48,5 @@ struct ExerciseRow: View {
         .background(Color.gray.opacity(0.2))
         .cornerRadius(12)
         .onTapGesture(perform: onTap)
-    }
-    
-    private func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
-        let storageRef = Storage.storage().reference(forURL: url.absoluteString)
-        
-        storageRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
-            if let error = error {
-                print("Error loading image: \(error.localizedDescription)")
-                return
-            }
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.exerciseImage = image
-                }
-            }
-        }
     }
 }

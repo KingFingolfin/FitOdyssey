@@ -48,8 +48,8 @@ struct WaterWidgetView: View {
     // Custom colors
     let waterGradient = LinearGradient(
         gradient: Gradient(colors: [
-            Color(red: 0.0, green: 0.7, blue: 0.9),
-            Color(red: 0.0, green: 0.4, blue: 0.9)  
+            Color(red: 0.0, green: 0.7, blue: 0.9),  // Light blue
+            Color(red: 0.0, green: 0.4, blue: 0.9)   // Darker blue
         ]),
         startPoint: .top,
         endPoint: .bottom

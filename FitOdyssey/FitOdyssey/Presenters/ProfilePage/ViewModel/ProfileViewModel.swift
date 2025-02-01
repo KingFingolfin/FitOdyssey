@@ -388,7 +388,6 @@ final class ProfileViewModel: ObservableObject {
 
             print("Workout plan removed from user successfully.")
 
-            // Delete the plan document itself
             firestore.collection("Plans").document(planId).delete { error in
                 if let error = error {
                     print("Failed to delete workout plan document: \(error.localizedDescription)")

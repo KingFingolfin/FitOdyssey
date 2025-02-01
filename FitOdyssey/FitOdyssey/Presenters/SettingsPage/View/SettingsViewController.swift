@@ -25,7 +25,6 @@ class SettingsViewController: UIViewController {
         SettingsItem(title: "Help", icon: "questionmark.circle.fill", color: .orange) { },
         SettingsItem(title: "Notifications", icon: "bell.fill", color: .orange) { },
         SettingsItem(title: "Feedback", icon: "envelope.fill", color: .orange) { },
-        SettingsItem(title: "Report Bugs", icon: "ant.fill", color: .orange) { },
         
         SettingsItem(title: "Logout", icon: "rectangle.portrait.and.arrow.right", color: .red) { [weak self] in
             guard let self = self else { return }

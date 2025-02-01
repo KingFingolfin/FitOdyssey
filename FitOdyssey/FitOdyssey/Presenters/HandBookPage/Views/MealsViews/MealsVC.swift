@@ -8,18 +8,21 @@
 import UIKit
 import FirebaseFirestore
 import FirebaseStorage
+import Combine
 
-class MealsVC: UIViewController {
+final class MealsVC: UIViewController {
     var handbookViewModel = HandbookViewModel()
     private var meals: [Meal] = []
     private var filteredMeals: [Meal] = []
     private let searchBar = UISearchBar()
     private var collectionView: UICollectionView!
-
+    private var cancellables = Set<AnyCancellable>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        fetchMeals()
+        setupBindings()
+        handbookViewModel.fetchMeals()
     }
 
     private func setupUI() {
@@ -73,14 +76,15 @@ class MealsVC: UIViewController {
         ])
     }
 
-    private func fetchMeals() {
-        handbookViewModel.fetchMeals { [weak self] fetchedMeals in
-            DispatchQueue.main.async {
-                self?.meals = fetchedMeals
-                self?.filteredMeals = fetchedMeals
+    private func setupBindings() {
+        handbookViewModel.$meals
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] meals in
+                self?.meals = meals
+                self?.filteredMeals = meals
                 self?.collectionView.reloadData()
             }
-        }
+            .store(in: &cancellables)
     }
 }
 
@@ -119,4 +123,3 @@ extension MealsVC: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
 }
-

@@ -6,14 +6,13 @@
 //
 
 import SwiftUI
-import FirebaseStorage
 
 struct ExerciseImageView: View {
     let imageURL: String
-    @State private var exerciseImage: UIImage? = nil
+    @StateObject private var viewModel = SharedImageViewModel()
     
     var body: some View {
-        if let image = exerciseImage {
+        if let image = viewModel.image {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()
@@ -22,25 +21,8 @@ struct ExerciseImageView: View {
                 .fill(Color.gray.opacity(0.3))
                 .overlay(ProgressView().padding(), alignment: .center)
                 .onAppear {
-                    loadImage(from: imageURL)
+                    viewModel.loadImage(from: imageURL)
                 }
-        }
-    }
-    
-    private func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
-        let storageRef = Storage.storage().reference(forURL: url.absoluteString)
-        
-        storageRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
-            if let error = error {
-                print("Error loading image: \(error.localizedDescription)")
-                return
-            }
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.exerciseImage = image
-                }
-            }
         }
     }
 }

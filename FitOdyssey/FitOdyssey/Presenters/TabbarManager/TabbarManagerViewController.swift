@@ -62,11 +62,17 @@ class TabBarViewController: UITabBarController {
     
     private func customizeTabBarAppearance() {
         tabBar.backgroundColor = .appTabbarBack
-
+        
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .appTabbarBack
+        appearance.shadowColor = .clear
+        tabBar.standardAppearance = appearance
+        tabBar.scrollEdgeAppearance = appearance
         
         tabBar.layer.cornerRadius = 30
         tabBar.layer.masksToBounds = true
-
+        
         tabBar.layer.borderColor = UIColor.darkGray.cgColor
         tabBar.layer.borderWidth = 1
     }

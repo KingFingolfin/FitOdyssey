@@ -35,7 +35,6 @@ struct WorkoutPlan: Codable, Identifiable {
     var id: String?
     var name: String = ""
     var exerciseIds: [String] = []
-
     var exercises: [Exercise] = []
 
     private enum CodingKeys: String, CodingKey {

@@ -5,15 +5,18 @@
 //  Created by Giorgi on 28.01.25.
 //
 import UIKit
-import FirebaseStorage
+import Combine
 
 class MealCell: UICollectionViewCell {
     private let imageView = UIImageView()
     private let nameLabel = UILabel()
+    private var viewModel = SharedImageViewModel()
+    private var cancellables = Set<AnyCancellable>()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        setupBindings()
     }
 
     required init?(coder: NSCoder) {
@@ -50,36 +53,19 @@ class MealCell: UICollectionViewCell {
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
         ])
     }
-    
+
+    private func setupBindings() {
+           viewModel.$image
+               .receive(on: DispatchQueue.main)
+               .sink { [weak self] image in
+                   self?.imageView.image = image
+               }
+               .store(in: &cancellables)
+       }
+
     func configure(with meal: Meal) {
         nameLabel.text = meal.name
-        imageView.image = nil
         imageView.image = UIImage(named: "placeholder")
-        loadImage(from: meal.image)
+        viewModel.loadImage(from: meal.image)
     }
-
-    private func loadImage(from urlString: String) {
-        guard let _ = URL(string: urlString) else { return }
-        let storageRef = Storage.storage().reference(forURL: urlString)
-
-        let currentTag = tag
-
-        storageRef.getData(maxSize: 1 * 1024 * 1024) { [weak self] data, error in
-            guard let self = self else { return }
-
-            if let error = error {
-                print("Error loading image: \(error.localizedDescription)")
-                return
-            }
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    if self.tag == currentTag {
-                        self.imageView.image = image
-                    }
-                }
-            }
-        }
-    }
-    
-    
 }

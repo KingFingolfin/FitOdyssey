@@ -16,65 +16,47 @@ final class HandbookViewModel: ObservableObject {
     @Published var workoutPlans: [WorkoutPlan] = []
     
     init() {
-        fetchMeals { [weak self] fetchedMeals in
-            DispatchQueue.main.async {
-                self?.meals = fetchedMeals
-            }
-        }
-        fetchExercises { [weak self] fetchExercises in
-            DispatchQueue.main.async {
-                self?.exercises = fetchExercises
-            }
-        }
-        fetchWorkoutPlans { [weak self] fetchPlans in
-            DispatchQueue.main.async {
-                self?.workoutPlans = fetchPlans
-            }
-        }
+        fetchMeals()
+        fetchExercises()
+        fetchWorkoutPlans()
     }
     
-    func fetchMeals(completion: @escaping ([Meal]) -> Void) {
+    func fetchMeals() {
         let firestore = Firestore.firestore()
         firestore.collection("Meals")
-            .getDocuments { snapshot, error in
+            .getDocuments { [weak self] snapshot, error in
                 if let error = error {
                     print("Error fetching meals: \(error.localizedDescription)")
                     return
                 }
-                self.meals = snapshot?.documents.compactMap { try? $0.data(as: Meal.self) } ?? []
-                completion(self.meals)
+                self?.meals = snapshot?.documents.compactMap { try? $0.data(as: Meal.self) } ?? []
             }
     }
     
-    func fetchExercises(completion: @escaping ([Exercise]) -> Void) {
+    func fetchExercises() {
         let firestore = Firestore.firestore()
         firestore.collection("Exercises")
-            .getDocuments { snapshot, error in
+            .getDocuments { [weak self] snapshot, error in
                 if let error = error {
                     print("Error fetching exercises: \(error.localizedDescription)")
                     return
                 }
-                let exercises = snapshot?.documents.compactMap { try? $0.data(as: Exercise.self) } ?? []
-                completion(exercises)
-                print("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥")
-                print(exercises)
+                self?.exercises = snapshot?.documents.compactMap { try? $0.data(as: Exercise.self) } ?? []
+                print("🔥🔥🔥🔥🔥🔥exercisesFound🔥🔥🔥🔥🔥🔥🔥")
             }
     }
     
-    
-    func fetchWorkoutPlans(completion: @escaping ([WorkoutPlan]) -> Void) {
+    func fetchWorkoutPlans() {
         let firestore = Firestore.firestore()
 
-        firestore.collection("BookPlans").getDocuments { snapshot, error in
+        firestore.collection("BookPlans").getDocuments { [weak self] snapshot, error in
             if let error = error {
                 print("Error fetching workout plans: \(error.localizedDescription)")
-                completion([])
                 return
             }
 
             guard let documents = snapshot?.documents else {
                 print("No workout plans found.")
-                completion([])
                 return
             }
 
@@ -94,20 +76,20 @@ final class HandbookViewModel: ObservableObject {
 
             if allExerciseIds.isEmpty {
                 print("No exercise IDs found.")
-                completion(workoutPlans)
+                self?.workoutPlans = workoutPlans
                 return
             }
 
             firestore.collection("Exercises")
                 .whereField(FieldPath.documentID(), in: Array(allExerciseIds))
-                .getDocuments { snapshot, error in
+                .getDocuments { [weak self] snapshot, error in
                     if let error = error {
                         print("Error fetching exercises: \(error.localizedDescription)")
-                        completion(workoutPlans)
+                        self?.workoutPlans = workoutPlans
                         return
                     }
-
                     var exerciseMap: [String: Exercise] = [:]
+                    
                     for document in snapshot?.documents ?? [] {
                         do {
                             var exercise = try document.data(as: Exercise.self)
@@ -117,17 +99,12 @@ final class HandbookViewModel: ObservableObject {
                             print("Error decoding exercise: \(error)")
                         }
                     }
-
                     for i in 0..<workoutPlans.count {
                         let exerciseIds = workoutPlans[i].exerciseIds
                         workoutPlans[i].exercises = exerciseIds.compactMap { exerciseMap[$0] }
                     }
-
-                    completion(workoutPlans)
+                    self?.workoutPlans = workoutPlans
                 }
         }
     }
-
 }
-
-

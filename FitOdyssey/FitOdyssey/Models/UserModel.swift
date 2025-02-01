@@ -13,7 +13,6 @@ struct User: Codable, Identifiable {
     let email: String
     var name: String
     var age: String = ""
-//    var weight: String = ""
     var height: String = ""
     var gender: String = ""
     var ImageUrl: String = ""
@@ -36,7 +35,6 @@ struct WorkoutPlan: Codable, Identifiable {
     var id: String?
     var name: String = ""
     var exerciseIds: [String] = []
-
     var exercises: [Exercise] = []
 
     private enum CodingKeys: String, CodingKey {

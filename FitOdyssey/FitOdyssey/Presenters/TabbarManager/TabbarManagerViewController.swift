@@ -22,8 +22,8 @@ class TabBarViewController: UITabBarController {
         let homeHostingController = UIHostingController(rootView: homeView)
         homeHostingController.tabBarItem = UITabBarItem(
             title: nil,
-            image: UIImage(named: "home"),
-            selectedImage: UIImage(named: "home")
+            image: UIImage(named: "dumbbell"),
+            selectedImage: UIImage(named: "dumbbell")
         )
 
         let bookVC = HandBookViewController()
@@ -49,7 +49,7 @@ class TabBarViewController: UITabBarController {
             selectedImage: UIImage(named: "settings")
         )
 
-        self.viewControllers = [homeHostingController, bookNavController, progressHostingController, settingsVC]
+        self.viewControllers = [progressHostingController, homeHostingController, bookNavController, settingsVC]
 
         tabBar.tintColor = .orange
         tabBar.unselectedItemTintColor = .gray
@@ -62,15 +62,26 @@ class TabBarViewController: UITabBarController {
     
     private func customizeTabBarAppearance() {
         tabBar.backgroundColor = .appTabbarBack
-
+        
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .appTabbarBack
+        appearance.shadowColor = .clear
+        tabBar.standardAppearance = appearance
+        tabBar.scrollEdgeAppearance = appearance
         
         tabBar.layer.cornerRadius = 30
         tabBar.layer.masksToBounds = true
-
+        
         tabBar.layer.borderColor = UIColor.darkGray.cgColor
         tabBar.layer.borderWidth = 1
     }
-
+    
+    private func setInitialBackgroundColor() {
+            
+            self.view.backgroundColor = .appBackground
+        }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 

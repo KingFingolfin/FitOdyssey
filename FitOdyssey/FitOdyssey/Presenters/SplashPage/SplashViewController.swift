@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import FirebaseAuth
 
 class SplashViewController: UIViewController {
     private let imageView = UIImageView()
@@ -18,15 +19,17 @@ class SplashViewController: UIViewController {
         view.backgroundColor = .appBackground
         imageSetup()
         textSetup()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.goToNextPage()
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.goToNextPage()
+        
+        if !OnboardingManager.shared.hasOnboarded {
+            showOnboarding()
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.goToNextPage()
+            }
         }
     }
 
@@ -70,11 +73,26 @@ class SplashViewController: UIViewController {
     }
     
     private func goToNextPage() {
-            let loginView = LoginView()
-            let hostingController = UIHostingController(rootView: loginView)
-            
-            hostingController.modalTransitionStyle = .crossDissolve
-            hostingController.modalPresentationStyle = .fullScreen
-            self.present(hostingController, animated: true, completion: nil)
+        if Auth.auth().currentUser != nil {
+            let mainView = UIHostingController(rootView: TabBarWrapperView().ignoresSafeArea())
+            mainView.modalTransitionStyle = .crossDissolve
+            mainView.modalPresentationStyle = .fullScreen
+            self.present(mainView, animated: true, completion: nil)
+        } else {
+            let loginView = UIHostingController(rootView: LoginView())
+            loginView.modalTransitionStyle = .crossDissolve
+            loginView.modalPresentationStyle = .fullScreen
+            self.present(loginView, animated: true, completion: nil)
+        }
+    }
+    
+    
+    private func showOnboarding() {
+            let onboardingVC = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+            onboardingVC.modalPresentationStyle = .fullScreen
+            onboardingVC.modalTransitionStyle = .crossDissolve
+            present(onboardingVC, animated: true) {
+                OnboardingManager.shared.hasOnboarded = true
+            }
         }
 }

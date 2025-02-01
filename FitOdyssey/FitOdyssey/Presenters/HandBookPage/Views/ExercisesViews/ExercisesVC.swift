@@ -90,7 +90,7 @@ final class ExercisesVC: UIViewController {
 
 extension ExercisesVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filteredExercises.count // Use filteredExercises instead of filteredMeals
+        return filteredExercises.count 
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

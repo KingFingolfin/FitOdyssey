@@ -11,7 +11,8 @@ struct SecureTextField: View {
     let placeholder: LocalizedStringKey
     @Binding var text: String
     @State private var isSecure: Bool = true
-
+    @FocusState private var isFocused: Bool
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
@@ -24,7 +25,7 @@ struct SecureTextField: View {
                 ZStack(alignment: .leading) {
                     if text.isEmpty {
                         Text(placeholder)
-                            .foregroundColor(.gray) 
+                            .foregroundColor(.gray)
                             .padding(.leading, 4)
                     }
 
@@ -33,10 +34,12 @@ struct SecureTextField: View {
                             SecureField("", text: $text)
                                 .foregroundColor(.white)
                                 .autocapitalization(.none)
+                                .focused($isFocused)
                         } else {
                             TextField("", text: $text)
                                 .foregroundColor(.white)
                                 .autocapitalization(.none)
+                                .focused($isFocused)
                         }
                     }
                     .padding(.leading, 8)
@@ -49,7 +52,7 @@ struct SecureTextField: View {
             }
             .padding(10)
             .frame(height: 52)
-            .background(Color.appTextFieldBackGround)
+            .background(isFocused ? Color.appTextFieldBackGround : Color.appTextFieldBackGround) 
             .cornerRadius(8)
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
@@ -58,3 +61,4 @@ struct SecureTextField: View {
         }
     }
 }
+

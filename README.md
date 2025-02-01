@@ -6,7 +6,7 @@ FitOdyssey is a comprehensive fitness tracking and workout planning app designed
 
 ## Screenshots
 
-![FitOdyssey Screenshot](your_image_link_here)
+![FitOdyssey Screenshot](https://github.com/KingFingolfin/FitOdyssey/blob/fix/fullCheck/screenshots/beforeAfter.png)
 ![FitOdyssey Screenshot](your_image_link_here)
 ![FitOdyssey Screenshot](your_image_link_here)
 

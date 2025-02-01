@@ -22,4 +22,18 @@ func getRootViewController() -> UIViewController {
     return rootViewController
 }
 
+class OnboardingManager {
+    static let shared = OnboardingManager()
+    private let hasOnboardedKey = "hasOnboarded"
+    
+    var hasOnboarded: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: hasOnboardedKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: hasOnboardedKey)
+        }
+    }
+}
+
 let workoutImages = ["image1", "image2", "image3"]

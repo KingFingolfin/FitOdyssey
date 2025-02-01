@@ -25,14 +25,13 @@ class StepsTrackerViewModel: ObservableObject {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
 
         if HKHealthStore.isHealthDataAvailable() {
-            let typesToShare: Set = [stepType]
             let typesToRead: Set = [stepType]
 
-            healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
+            healthStore.requestAuthorization(toShare: [], read: typesToRead) { success, error in
                 DispatchQueue.main.async {
                     if success {
                         self.isHealthDataAvailable = true
-                        self.fetchStepsData() // Fetch data after authorization
+                        self.fetchStepsData()
                     } else {
                         self.isHealthDataAvailable = false
                         print("Health data authorization failed: \(String(describing: error))")
@@ -41,6 +40,7 @@ class StepsTrackerViewModel: ObservableObject {
             }
         }
     }
+
 
 
     func fetchStepsData() {

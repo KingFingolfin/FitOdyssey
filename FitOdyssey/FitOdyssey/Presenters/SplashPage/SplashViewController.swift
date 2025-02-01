@@ -19,15 +19,17 @@ class SplashViewController: UIViewController {
         view.backgroundColor = .appBackground
         imageSetup()
         textSetup()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.goToNextPage()
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.goToNextPage()
+        
+        if !OnboardingManager.shared.hasOnboarded {
+            showOnboarding()
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.goToNextPage()
+            }
         }
     }
 
@@ -83,4 +85,14 @@ class SplashViewController: UIViewController {
             self.present(loginView, animated: true, completion: nil)
         }
     }
+    
+    
+    private func showOnboarding() {
+            let onboardingVC = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+            onboardingVC.modalPresentationStyle = .fullScreen
+            onboardingVC.modalTransitionStyle = .crossDissolve
+            present(onboardingVC, animated: true) {
+                OnboardingManager.shared.hasOnboarded = true
+            }
+        }
 }

@@ -72,14 +72,11 @@ struct WaterTrackerView: View {
                                 )
                                 .onSubmit {
                                     if let newGoal = Double(customGoal), newGoal > 0 {
-                                        if newGoal >= currentWater { // Restriction added
-                                            goal = newGoal
-                                            saveWaterData()
-                                            updateWaterHeight()
-                                        } else {
-                                            // Reset the text field to the previous valid goal value
-                                            customGoal = String(format: "%.1f", goal)
-                                        }
+                                        goal = newGoal
+                                        saveWaterData()
+                                        updateWaterHeight()
+                                    } else {
+                                        customGoal = String(format: "%.1f", goal) 
                                     }
                                 }
                                 
@@ -142,16 +139,22 @@ struct WaterTrackerView: View {
                     }
                     .padding(.horizontal)
                     .onAppear {
+                        if goal <= 0 { goal = 3 }
                         customGoal = String(format: "%.1f", goal)
                         checkForNewDay()
                         updateWaterHeight()
                     }
                 }
 
-                func updateWaterHeight() {
-                    let ratio = min(currentWater / goal, 1.0)
-                    waterHeight = CGFloat(ratio) * containerHeight
-                }
+    func updateWaterHeight() {
+        if goal > 0 {
+            let ratio = min(currentWater / goal, 1.0)
+            waterHeight = CGFloat(ratio) * containerHeight
+        } else {
+            waterHeight = 0
+        }
+    }
+
 
                 func saveWaterData() {
                     let defaults = UserDefaults(suiteName: "group.com.example.FitOdyssey")

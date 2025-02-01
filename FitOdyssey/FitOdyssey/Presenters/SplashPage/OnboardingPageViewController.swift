@@ -31,61 +31,63 @@ class OnboardingPageViewController: UIViewController {
     }
 
     private func setupUI(imageName: String, title: String, description: String) {
-        view.backgroundColor = UIColor.black
+        view.backgroundColor = .white
 
+        // Image View
         imageView.image = UIImage(systemName: imageName)
-        imageView.tintColor = UIColor.orange
+        imageView.tintColor = .blue
         imageView.contentMode = .scaleAspectFit
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
+        // Title Label
         titleLabel.text = title
-        titleLabel.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-        titleLabel.textColor = .white
+        titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         titleLabel.textAlignment = .center
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
+        // Description Label
         descriptionLabel.text = description
-        descriptionLabel.font = UIFont.systemFont(ofSize: 18)
-        descriptionLabel.textColor = .lightGray
+        descriptionLabel.font = UIFont.systemFont(ofSize: 16)
         descriptionLabel.textAlignment = .center
         descriptionLabel.numberOfLines = 0
         view.addSubview(descriptionLabel)
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
 
+        // Get Started Button (hidden by default)
         getStartedButton.setTitle("Get Started", for: .normal)
-        getStartedButton.setTitleColor(.black, for: .normal)
-        getStartedButton.backgroundColor = .orange
-        getStartedButton.layer.cornerRadius = 12
-        getStartedButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        getStartedButton.setTitleColor(.white, for: .normal)
+        getStartedButton.backgroundColor = .blue
+        getStartedButton.layer.cornerRadius = 10
         getStartedButton.addTarget(self, action: #selector(getStartedButtonTapped), for: .touchUpInside)
         getStartedButton.isHidden = true
         view.addSubview(getStartedButton)
         getStartedButton.translatesAutoresizingMaskIntoConstraints = false
 
+        // Constraints
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
-            imageView.widthAnchor.constraint(equalToConstant: 120),
-            imageView.heightAnchor.constraint(equalToConstant: 120),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            imageView.widthAnchor.constraint(equalToConstant: 100),
+            imageView.heightAnchor.constraint(equalToConstant: 100),
 
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 30),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 
-            getStartedButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
-            getStartedButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            getStartedButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            getStartedButton.heightAnchor.constraint(equalToConstant: 55)
+            getStartedButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            getStartedButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            getStartedButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            getStartedButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 
     @objc private func getStartedButtonTapped() {
-        onGetStartedTapped?()
+        onGetStartedTapped?() // Notify the parent view controller
     }
 }
